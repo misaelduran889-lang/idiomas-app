@@ -1,0 +1,42 @@
+LISTA DE AUDIOS PARA GENERAR EN ELEVENLABS
+==========================================
+Cómo usarla:
+- Para INGLÉS usa siempre la voz "Voice 1.1" (la de ingles-voz.mp3).
+- Para COREANO usa siempre la voz "Voice 2.1" (la de coreano-voz.mp3).
+- Velocidad: 0.8 para estas primeras palabras.
+- Un archivo por cada línea. Guárdalo con el nombre exacto de la columna "Archivo" y ponlo en la carpeta indicada.
+- Mantén la misma configuración de voz en todos los archivos.
+
+--- INGLÉS (carpeta audio/en/) ---
+Archivo                 | Texto a generar
+------------------------|-----------------------------
+hello.mp3               | Hello
+hi.mp3                  | Hi
+father.mp3              | Father
+ice-cream.mp3           | Ice cream
+ice.mp3                 | Ice
+cream.mp3               | Cream
+house.mp3               | House
+water.mp3               | Water
+chair.mp3               | Chair
+mom.mp3                 | Mom
+dad.mp3                 | Dad
+thank-you.mp3           | Thank you
+good-morning.mp3        | Good morning
+this-is-my-house.mp3    | This is my house.
+
+--- COREANO (carpeta audio/ko/) ---
+Archivo                 | Texto a generar
+------------------------|-----------------------------
+안녕하세요.mp3            | 안녕하세요
+안녕.mp3                 | 안녕
+감사합니다.mp3            | 감사합니다
+아버지.mp3                | 아버지
+엄마.mp3                  | 엄마
+아빠.mp3                  | 아빠
+집.mp3                    | 집
+물.mp3                    | 물
+의자.mp3                  | 의자
+아이스크림.mp3            | 아이스크림
+
+--- Para la primera etapa de alfabeto coreano (Hangul), se añadirá después ---
