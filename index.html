@@ -179,11 +179,20 @@ function mapa(){
     <table style="width:100%;border-collapse:collapse;margin-top:10px">${filas.join("")}</table></div>`;
 }
 
+// Audio por palabra: si existe el MP3 (audio/en/<slug>.mp3 o audio/ko/<slug>.mp3) se usa;
+// si no, se usa la voz del navegador como respaldo.
+function slug(t){ return t.toLowerCase().replace(/[^a-z0-9\uac00-\ud7af]+/g,"-").replace(/^-|-$/g,""); }
 function hablar(texto){
+  const esKo = /[\uac00-\ud7af]/.test(texto);
+  const ruta = (esKo ? "audio/ko/" : "audio/en/") + slug(texto) + ".mp3";
+  const a = new Audio(ruta);
+  a.onerror = () => voz(texto, esKo);
+  a.play().catch(() => voz(texto, esKo));
+}
+function voz(texto, esKo){
   if (!("speechSynthesis" in window)) return;
   const u = new SpeechSynthesisUtterance(texto);
-  const idioma = /[\uac00-\ud7af]/.test(texto) ? "ko-KR" : "en-US";
-  u.lang = idioma;
+  u.lang = esKo ? "ko-KR" : "en-US";
   speechSynthesis.cancel();
   speechSynthesis.speak(u);
 }
