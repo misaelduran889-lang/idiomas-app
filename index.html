@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0b1220">
+<link rel="manifest" href="manifest.json">
+<title>Idiomas · Mi tutor</title>
+<style>
+  :root { --bg:#0b1220; --panel:#151d2e; --line:#26324a; --txt:#e8edf7; --sub:#93a0b8; --acc:#4ade80; --warn:#fb923c; }
+  * { box-sizing: border-box; }
+  body { margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; background:var(--bg); color:var(--txt); min-height:100vh; }
+  header { padding:16px 18px; border-bottom:1px solid var(--line); display:flex; justify-content:space-between; align-items:center; }
+  header h1 { font-size:20px; margin:0; }
+  main { max-width:720px; margin:0 auto; padding:16px; }
+  nav { position:fixed; bottom:0; left:0; right:0; background:var(--panel); border-top:1px solid var(--line); display:flex; justify-content:space-around; padding:8px 0; }
+  nav button { background:none; border:0; color:var(--sub); font-size:14px; padding:8px; }
+  nav button.on { color:var(--acc); font-weight:600; }
+  .card { background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:18px; margin-bottom:14px; }
+  .btn { background:var(--acc); color:#06210f; border:0; border-radius:10px; padding:12px 18px; font-size:16px; font-weight:600; cursor:pointer; }
+  .btn.sec { background:transparent; color:var(--txt); border:1px solid var(--line); }
+  .muted { color:var(--sub); font-size:14px; }
+  .big { font-size:30px; font-weight:700; }
+  .pron { font-size:20px; color:var(--acc); margin:6px 0; }
+  .tag { display:inline-block; font-size:12px; padding:3px 9px; border-radius:99px; border:1px solid var(--line); color:var(--sub); margin-right:6px; }
+  .tag.formal { color:#60a5fa; } .tag.informal { color:var(--warn); }
+  .parts { display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-top:12px; }
+  .part { background:#0f1626; border:1px solid var(--line); border-radius:10px; padding:10px; }
+  .img { width:100%; height:180px; object-fit:cover; border-radius:12px; background:#0f1626; margin-bottom:10px; }
+  .row { display:flex; gap:10px; flex-wrap:wrap; margin-top:12px; }
+  .bar { height:8px; background:#0f1626; border-radius:99px; overflow:hidden; margin-top:6px; }
+  .bar > div { height:100%; background:var(--acc); }
+  .pad { height:80px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>🎓 Mi tutor</h1>
+  <span class="muted" id="streak"></span>
+</header>
+
+<main id="app"></main>
+<div class="pad"></div>
+
+<nav>
+  <button data-view="hoy" class="on">Hoy</button>
+  <button data-view="estudiar">Estudiar</button>
+  <button data-view="clases">Clases</button>
+  <button data-view="mapa">Mapa</button>
+</nav>
+
+<script>
+// ---------- Datos de ejemplo (etapa 1) ----------
+// Cada entrada: idioma, texto, pronunciación en español, significado, registro, imagen y partes (para compuestas).
+const CURSOS = {
+  ingles: { nombre: "Inglés", lecciones: [
+    { id: "ing-1", titulo: "Saludos y familia", items: [
+      { id:"i1", texto:"Hello", pron:"JELÓ", es:"Hola (formal, con personas que no conoces)", reg:"formal", img:"img/hello.jpg", partes:null },
+      { id:"i2", texto:"Hi", pron:"JÁI", es:"Hola (informal, con amigos)", reg:"informal", img:"img/hi.jpg", partes:null },
+      { id:"i3", texto:"Father", pron:"FÁ-der", es:"Padre", reg:"neutral", img:"img/father.jpg", nota:"La 'th' se hace con la punta de la lengua entre los dientes.", partes:null },
+      { id:"i4", texto:"Ice cream", pron:"ÁIS KRÍM", es:"Helado", reg:"neutral", img:"img/icecream.jpg",
+        partes:[ { t:"ice", pron:"ÁIS", es:"hielo (solo)" }, { t:"cream", pron:"KRÍM", es:"crema o nata (solo)" } ],
+        otro:"Significados secundarios: 'ice' también puede ser 'congelar', y 'cream' puede ser 'crema' para la piel." }
+    ]}
+  ]},
+  coreano: { nombre: "Coreano", lecciones: [
+    { id: "cor-1", titulo: "Saludos", items: [
+      { id:"c1", texto:"안녕하세요", pron:"ANYÓNG-HA-SÉ-YO", es:"Hola (formal)", reg:"formal", img:"img/hola-formal.jpg", partes:null },
+      { id:"c2", texto:"안녕", pron:"ANYÓNG", es:"Hola (informal, con amigos)", reg:"informal", img:"img/hola-informal.jpg", partes:null },
+      { id:"c3", texto:"감사합니다", pron:"KAMSA-HAMNIDA", es:"Gracias (formal)", reg:"formal", img:"img/gracias.jpg", partes:null }
+    ]}
+  ]}
+};
+
+// ---------- Estado guardado en el dispositivo ----------
+const KEY = "tutor-estado-v1";
+let estado = JSON.parse(localStorage.getItem(KEY) || '{"tarjetas":{},"racha":0,"ultimo":null}');
+function guardar(){ localStorage.setItem(KEY, JSON.stringify(estado)); }
+
+// Repetición espaciada sencilla: acertar alarga el intervalo; fallar lo reinicia.
+const hoyTS = () => Date.now();
+const DIA = 86400000;
+function programar(id, acierto){
+  const t = estado.tarjetas[id] || { paso: 0, prox: 0 };
+  const pasos = [1, 3, 7, 14, 30]; // días
+  t.paso = acierto ? Math.min(t.paso + 1, pasos.length - 1) : 0;
+  t.prox = hoyTS() + pasos[t.paso] * DIA;
+  estado.tarjetas[id] = t;
+  guardar();
+}
+function pendientes(){
+  const lista = [];
+  for (const k in CURSOS) for (const l of CURSOS[k].lecciones) for (const it of l.items) {
+    const t = estado.tarjetas[it.id];
+    if (!t || t.prox <= hoyTS()) lista.push({ ...it, curso:k, leccion:l.id });
+  }
+  return lista;
+}
+
+// ---------- Pantallas ----------
+const app = document.getElementById("app");
+let vista = "hoy";
+
+function render(){
+  document.querySelectorAll("nav button").forEach(b => b.classList.toggle("on", b.dataset.view === vista));
+  const r = estado.racha || 0;
+  document.getElementById("streak").textContent = r ? `🔥 ${r} días` : "";
+  ({ hoy, estudiar, clases, mapa }[vista])();
+}
+
+function hoy(){
+  const pend = pendientes();
+  const total = Object.keys(estado.tarjetas).length;
+  app.innerHTML = `
+    <div class="card">
+      <div class="big">${pend.length ? "Hoy toca estudiar" : "¡Estás al día!"}</div>
+      <p class="muted">${pend.length ? `${pend.length} palabras para repasar o aprender.` : "Vuelve mañana: lo que aprendiste regresará a su tiempo."}</p>
+      <div class="row"><button class="btn" onclick="ir('estudiar')">Empezar</button></div>
+    </div>
+    <div class="card">
+      <div class="muted">Tu avance</div>
+      <div class="bar"><div style="width:${Math.min(100, total * 10)}%"></div></div>
+      <p class="muted">${total} palabras en tu mapa de conocimiento.</p>
+    </div>`;
+}
+
+function estudiar(){
+  const pend = pendientes();
+  if (!pend.length){ app.innerHTML = `<div class="card"><p>No tienes nada pendiente. ¡Buen trabajo!</p></div>`; return; }
+  mostrarTarjeta(pend[0]);
+}
+
+function mostrarTarjeta(it){
+  const reg = `<span class="tag ${it.reg}">${it.reg}</span>`;
+  const partes = it.partes ? `
+    <div class="parts">${it.partes.map(p => `
+      <div class="part"><b>${p.t}</b><div class="pron">${p.pron}</div><div class="muted">${p.es}</div></div>`).join("")}
+    </div>
+    <p class="muted">${it.otro || ""}</p>` : "";
+  app.innerHTML = `
+    <div class="card">
+      <img class="img" src="${it.img}" alt="" onerror="this.style.display='none'">
+      <div class="big">${it.texto}</div>
+      <div class="pron">${it.pron}</div>
+      <div>${reg}</div>
+      <p><b>Significado:</b> ${it.es}</p>
+      ${it.nota ? `<p class="muted">💡 ${it.nota}</p>` : ""}
+      ${partes}
+      <div class="row">
+        <button class="btn" onclick="hablar('${it.texto.replace(/'/g,"\\'")}')">🔊 Escuchar</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="muted">¿La recordaste?</div>
+      <div class="row">
+        <button class="btn sec" onclick="responder('${it.id}', false)">No la sabía</button>
+        <button class="btn" onclick="responder('${it.id}', true)">Sí</button>
+      </div>
+    </div>`;
+}
+
+function responder(id, ok){ programar(id, ok); estudiar(); }
+
+function clases(){
+  app.innerHTML = Object.entries(CURSOS).map(([k, c]) => `
+    <div class="card"><div class="big">${c.nombre}</div>
+      ${c.lecciones.map(l => `<p>📘 ${l.titulo} · ${l.items.length} palabras</p>`).join("")}
+    </div>`).join("");
+}
+
+function mapa(){
+  const filas = [];
+  for (const k in CURSOS) for (const l of CURSOS[k].lecciones) for (const it of l.items) {
+    const t = estado.tarjetas[it.id];
+    const estadoTxt = !t ? "Nueva" : (t.prox <= hoyTS() ? "Para repasar" : `Próxima en ${Math.ceil((t.prox - hoyTS()) / DIA)} días`);
+    filas.push(`<tr><td>${it.texto}</td><td>${it.es}</td><td class="muted">${estadoTxt}</td></tr>`);
+  }
+  app.innerHTML = `<div class="card"><div class="big">Mapa de conocimiento</div>
+    <table style="width:100%;border-collapse:collapse;margin-top:10px">${filas.join("")}</table></div>`;
+}
+
+function hablar(texto){
+  if (!("speechSynthesis" in window)) return;
+  const u = new SpeechSynthesisUtterance(texto);
+  const idioma = /[\uac00-\ud7af]/.test(texto) ? "ko-KR" : "en-US";
+  u.lang = idioma;
+  speechSynthesis.cancel();
+  speechSynthesis.speak(u);
+}
+
+function ir(v){ vista = v; render(); }
+document.querySelectorAll("nav button").forEach(b => b.onclick = () => ir(b.dataset.view));
+
+// Registro de la PWA (instalable en Chrome y Android)
+if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js");
+
+render();
+</script>
+</body>
+</html>
