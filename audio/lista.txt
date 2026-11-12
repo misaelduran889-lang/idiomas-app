@@ -1,0 +1,11 @@
+# Formato: idioma|palabra   (en = inglés, ko = coreano)
+en|Hello
+en|Hi
+en|Father
+en|Ice cream
+en|House
+en|Water
+en|Chair
+ko|안녕하세요
+ko|안녕
+ko|감사합니다
