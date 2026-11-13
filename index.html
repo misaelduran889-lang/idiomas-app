@@ -3854,6 +3854,38 @@ const IDIOMAS = {
           { id:"cp-oido-24", texto:"Meat", pron:"", es:"Carne", reg:"neutral" },
           { id:"cp-oido-25", texto:"Chicken", pron:"", es:"Pollo", reg:"neutral" },
           { id:"cp-oido-26", texto:"Fish", pron:"", es:"Pescado", reg:"neutral" }
+        ]},
+      { id:"cp-oido2-s", titulo:"Clase práctica 17: Entrena tu oído (videos 34 a 50)",
+        pasos:[ { tipo:"gancho", texto:"Frases de los videos \"Entrena tu oído\" del canal, del 34 al 50." } ],
+        items:[
+          { id:"cp-oido2-0", texto:"I wash clothes on Sunday.", pron:"", es:"Lavo ropa el domingo.", reg:"neutral" },
+          { id:"cp-oido2-1", texto:"Then I hang them outside.", pron:"", es:"Luego las tiendo afuera.", reg:"neutral" },
+          { id:"cp-oido2-2", texto:"The sun dries them quickly.", pron:"", es:"El sol las seca rápido.", reg:"neutral" },
+          { id:"cp-oido2-3", texto:"I fold them when they dry.", pron:"", es:"Las doblo cuando se secan.", reg:"neutral" },
+          { id:"cp-oido2-4", texto:"Then I put them away.", pron:"", es:"Luego las guardo.", reg:"neutral" },
+          { id:"cp-oido2-5", texto:"Screwdriver", pron:"", es:"Destornillador", reg:"neutral" },
+          { id:"cp-oido2-6", texto:"Hammer", pron:"", es:"Martillo", reg:"neutral" },
+          { id:"cp-oido2-7", texto:"Spoon", pron:"", es:"Cuchara", reg:"neutral" },
+          { id:"cp-oido2-8", texto:"I cook rice for lunch.", pron:"", es:"Cocino arroz para el almuerzo.", reg:"neutral" },
+          { id:"cp-oido2-9", texto:"My sister cuts the vegetables.", pron:"", es:"Mi hermana corta las verduras.", reg:"neutral" },
+          { id:"cp-oido2-10", texto:"We cook together today.", pron:"", es:"Hoy cocinamos juntos.", reg:"neutral" },
+          { id:"cp-oido2-11", texto:"The food smells so good.", pron:"", es:"La comida huele muy bien.", reg:"neutral" },
+          { id:"cp-oido2-12", texto:"We sit down and eat.", pron:"", es:"Nos sentamos a comer.", reg:"neutral" },
+          { id:"cp-oido2-13", texto:"I clean the kitchen today.", pron:"", es:"Limpio la cocina hoy.", reg:"neutral" },
+          { id:"cp-oido2-14", texto:"First, I wash the dishes.", pron:"", es:"Primero lavo los platos.", reg:"neutral" },
+          { id:"cp-oido2-15", texto:"Then I clean the table.", pron:"", es:"Luego limpio la mesa.", reg:"neutral" },
+          { id:"cp-oido2-16", texto:"My mom sweeps the floor.", pron:"", es:"Mi mamá barre el piso.", reg:"neutral" },
+          { id:"cp-oido2-17", texto:"Now the kitchen looks nice.", pron:"", es:"Ahora la cocina se ve bonita.", reg:"neutral" },
+          { id:"cp-oido2-18", texto:"I make my bed each morning.", pron:"", es:"Tiendo mi cama cada mañana.", reg:"neutral" },
+          { id:"cp-oido2-19", texto:"Then I open the window.", pron:"", es:"Luego abro la ventana.", reg:"neutral" },
+          { id:"cp-oido2-20", texto:"Sunlight fills my room.", pron:"", es:"La luz del sol llena mi cuarto.", reg:"neutral" },
+          { id:"cp-oido2-21", texto:"I put my clothes away.", pron:"", es:"Guardo mi ropa.", reg:"neutral" },
+          { id:"cp-oido2-22", texto:"Now my room looks better.", pron:"", es:"Ahora mi cuarto se ve mejor.", reg:"neutral" },
+          { id:"cp-oido2-23", texto:"I walk home after work.", pron:"", es:"Camino a casa después del trabajo.", reg:"neutral" },
+          { id:"cp-oido2-24", texto:"The streets are very quiet.", pron:"", es:"Las calles están muy tranquilas.", reg:"neutral" },
+          { id:"cp-oido2-25", texto:"I see people going home.", pron:"", es:"Veo personas yendo a casa.", reg:"neutral" },
+          { id:"cp-oido2-26", texto:"The sun is going down.", pron:"", es:"El sol se está ocultando.", reg:"neutral" },
+          { id:"cp-oido2-27", texto:"I arrive home before dark.", pron:"", es:"Llego a casa antes de oscurecer.", reg:"neutral" }
         ]}
     ]}
   ]},
@@ -4364,6 +4396,7 @@ const PRACTICAS = [
   { titulo: "Video 15 · Conectores", sesiones: ["cp-conect-s"] },
   { titulo: "Video 16 · Algún / ningún", sesiones: ["cp-alg-s"] },
   { titulo: "Videos 19 a 33 · Entrena tu oído", sesiones: ["cp-oido-s"] },
+  { titulo: "Videos 34 a 50 · Entrena tu oído", sesiones: ["cp-oido2-s"] },
 ];
 let practicaVer = null; // { n, i }
 const tarjetasPractica = n => PRACTICAS[n].sesiones.flatMap(id => (buscarSesion(id) || { items: [] }).items);
