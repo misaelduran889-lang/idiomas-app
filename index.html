@@ -43,6 +43,15 @@
   .subt { background:rgba(15,22,38,.88); border:1px solid var(--line); border-radius:14px; padding:14px; margin-top:12px; }
   .pad { height:80px; }
   table td { padding:6px 4px; border-bottom:1px solid var(--line); }
+  /* Movimiento suave: tarjetas que aparecen y botones que responden al toque */
+  @keyframes subir { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:none; } }
+  .card { animation: subir .4s ease both; }
+  .btn, .opt, nav button { transition: transform .15s ease, filter .15s ease; }
+  .btn:active, .opt:active { transform: scale(.97); }
+  .bar > div { transition: width .6s ease; }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
+  }
   /* Fondo por pantalla: la imagen de cada vista queda detrás, con velo oscuro para leer bien */
   body::before { content:""; position:fixed; inset:0; z-index:-1; pointer-events:none; background-size:cover; background-position:center; background-color:var(--bg); }
   body[data-vista="hoy"]::before { background-image: linear-gradient(rgba(11,18,32,.72), rgba(11,18,32,.9)), url("img/fondo-hoy.jpg"); }
