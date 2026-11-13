@@ -1,0 +1,111 @@
+# Palabras y frases para generar audio (una por línea). Nombre del archivo: el texto en minúsculas con guiones.
+# Formato: idioma|texto. Poner el MP3 en audio/en/ o audio/ko/ con el mismo nombre (ver scripts/generar-audio.py).
+en|A
+en|B
+en|C
+en|D
+en|E
+en|F
+en|G
+en|H
+en|I
+en|J
+en|K
+en|L
+en|M
+en|N
+en|O
+en|P
+en|Q
+en|R
+en|S
+en|T
+en|U
+en|V
+en|W
+en|X
+en|Y
+en|Z
+en|Hello
+en|Hi
+en|Good morning
+en|Good night
+en|Bye
+en|Thank you
+en|Please
+en|Yes
+en|No
+en|Sorry
+en|Excuse me
+en|How are you?
+en|Father
+en|Think
+en|This
+en|Ice cream
+en|Sunflower
+en|Bedroom
+en|Mother
+en|Brother
+en|Sister
+en|Son
+en|Daughter
+en|Hello! How are you today?
+en|Nice to meet you. What is your name?
+en|Good morning! Would you like some coffee?
+en|Thank you for coming. See you tomorrow!
+en|I'm fine, thank you.
+en|My name is Kevin.
+en|Yes, please.
+en|See you tomorrow, bye!
+ko|ㄱ
+ko|ㄴ
+ko|ㄷ
+ko|ㄹ
+ko|ㅁ
+ko|ㅂ
+ko|ㅅ
+ko|ㅇ
+ko|ㅈ
+ko|ㅎ
+ko|ㅋ
+ko|ㅌ
+ko|ㅍ
+ko|ㅊ
+ko|ㅏ
+ko|ㅓ
+ko|ㅗ
+ko|ㅜ
+ko|ㅡ
+ko|ㅣ
+ko|ㅑ
+ko|ㅕ
+ko|ㅛ
+ko|ㅠ
+ko|가
+ko|나
+ko|다
+ko|라
+ko|마
+ko|바
+ko|사
+ko|하
+ko|자
+ko|아
+ko|하나
+ko|나라
+ko|가수
+ko|사과
+ko|바나나
+ko|안녕하세요
+ko|안녕
+ko|감사합니다
+ko|네
+ko|아니요
+ko|미안합니다
+ko|안녕히 가세요
+ko|안녕하세요! 오늘 어떻게 지내요?
+ko|만나서 반가워요. 이름은 뭐예요?
+ko|감사합니다! 내일 봐요.
+ko|네, 잘 지내요.
+ko|제 이름은 Kevin이에요.
+ko|네, 내일 봐요.
