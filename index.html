@@ -811,12 +811,13 @@ function llamada(){
   const k = estado.idioma, E = escena(k);
   if (!E){ app.innerHTML = `<div class="card"><p>Aún no hay llamada para este idioma.</p></div>`; return; }
   if (!E.lineas.length){ app.innerHTML = `<div class="llam"><div class="big">Llamada bloqueada</div><p class="muted">Aprueba la sesión de saludos para desbloquear esta llamada. Las frases usan lo que ya estudiaste.</p></div>`; return; }
-  if (!llamadaEst || llamadaEst.k !== k) llamadaEst = { k, i: 0, ok: 0, hablado: -1, fb: "", respondida: false };
+  if (!llamadaEst || llamadaEst.k !== k) llamadaEst = { k, i: 0, ok: 0, hablado: -1, fb: "", respondida: false, res: [] };
   const total = E.lineas.length, fin = llamadaEst.i >= total;
   if (fin){
     app.innerHTML = `<div class="llam">
       <div class="big">Llamada terminada</div>
       <p class="muted">Respondiste bien ${llamadaEst.ok} de ${total}.</p>
+      <ul style="padding-left:18px;line-height:1.6">${E.lineas.map((L, j) => `<li>${llamadaEst.res[j] ? "✔" : "✖"} <b>${L.tu}</b> <span class="muted">${L.tuPr} · ${L.tuEs}</span></li>`).join("")}</ul>
       <div class="row"><button class="btn" onclick="reiniciarLlamada()">Repetir llamada</button></div>
     </div>`;
     return;
@@ -870,19 +871,22 @@ function evaluar(texto){
   const L = escena(llamadaEst.k).lineas[llamadaEst.i];
   const t = texto.toLowerCase().replace(/[.,!?¿¡]/g, "");
   const ok = L.clave.every(w => t.includes(w.toLowerCase()));
-  marcar(ok, ok ? "✔ ¡Muy bien!" : `Casi. Di algo como: "${L.tu}"`);
+  if (!ok) decirMaestro(L.tu);
+  marcar(ok, ok ? "✔ ¡Muy bien!" : `Escuché: "${texto}". Respuesta correcta: "${L.tu}" (${L.tuPr}) — ${L.tuEs}`);
 }
 // Marca la respuesta de la línea actual (una sola vez) y muestra el botón Siguiente.
 function marcar(ok, aviso){
   if (llamadaEst.respondida) return;
   llamadaEst.respondida = true;
+  llamadaEst.res[llamadaEst.i] = ok;
   if (ok) llamadaEst.ok++;
   llamadaEst.fb = aviso;
   llamada();
 }
 function autoevaluar(ok){
   const L = escena(llamadaEst.k).lineas[llamadaEst.i];
-  marcar(ok, ok ? "✔ ¡Muy bien!" : `Vuelve a intentarlo. Frase: "${L.tu}"`);
+  if (!ok) decirMaestro(L.tu);
+  marcar(ok, ok ? "✔ ¡Muy bien!" : `Respuesta correcta: "${L.tu}" (${L.tuPr}) — ${L.tuEs}. Escúchala y repítela.`);
 }
 function siguienteLinea(){
   llamadaEst.i++;
