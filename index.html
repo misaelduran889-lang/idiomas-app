@@ -77,6 +77,7 @@
   <button data-view="hoy" class="on">Hoy</button>
   <button data-view="estudiar">Repasar</button>
   <button data-view="ruta">Ruta</button>
+  <button data-view="practicas">Prácticas</button>
   <button data-view="llamada">Llamada</button>
   <button data-view="mapa">Mapa</button>
 </nav>
@@ -4144,9 +4145,9 @@ let sesionAct = null;
 function render(){
   document.body.dataset.vista = vista;
   document.querySelectorAll("nav button").forEach(b => b.classList.toggle("on", b.dataset.view === vista));
-  ({ hoy, estudiar, ruta, llamada, mapa }[vista])();
+  ({ hoy, estudiar, ruta, practicas, llamada, mapa }[vista])();
 }
-function ir(v){ sesionAct = null; vista = v; render(); window.scrollTo(0, 0); }
+function ir(v){ sesionAct = null; practicaVer = null; vista = v; render(); window.scrollTo(0, 0); }
 document.querySelectorAll("nav button").forEach(b => b.onclick = () => ir(b.dataset.view));
 
 function hoy(){
@@ -4236,6 +4237,52 @@ function mostrarTarjeta(it, total){
     </div>`;
 }
 function responder(id, ok){ programar(id, ok); estudiar(); }
+
+// ---------- Prácticas por video (tarjetas, como en el canal) ----------
+const PRACTICAS = [
+  { titulo: "Video 1 · El abecedario", sesiones: ["in-1a", "in-1b"] },
+  { titulo: "Videos 2 y 3 · Pronombres personales", sesiones: ["n-pron"] },
+  { titulo: "Video 5 · Meses del año", sesiones: ["nt-meses"] },
+  { titulo: "Video 6 · Estaciones del año", sesiones: ["nt-estaciones"] },
+  { titulo: "Video 7 · Colores", sesiones: ["n-colores", "nt-colores"] },
+  { titulo: "Video 8 · Partes de la casa", sesiones: ["nt-casa"] },
+  { titulo: "Video 9 · Frutas", sesiones: ["n-frutas", "nt-frutas"] },
+];
+let practicaVer = null; // { n, i }
+const tarjetasPractica = n => PRACTICAS[n].sesiones.flatMap(id => (buscarSesion(id) || { items: [] }).items);
+function practicas(){
+  if (practicaVer) return practicaCarta();
+  app.innerHTML = `<div class="card"><div class="big">Prácticas por video</div>
+    <p class="muted">Tarjetas de cada video para practicar viendo las palabras. Toca un video para empezar.</p></div>` +
+    PRACTICAS.map((g, n) => {
+      const total = tarjetasPractica(n).length;
+      return `<div class="card"><div class="sub">${g.titulo}</div>
+        <div class="muted">${total} tarjetas</div>
+        <div class="row"><button class="btn" ${total ? "" : "disabled"} onclick="abrirPractica(${n})">Practicar</button></div></div>`;
+    }).join("");
+}
+function abrirPractica(n){ practicaVer = { n, i: 0 }; render(); window.scrollTo(0, 0); }
+function practicaCarta(){
+  const g = PRACTICAS[practicaVer.n], items = tarjetasPractica(practicaVer.n), it = items[practicaVer.i];
+  app.innerHTML = `<div class="card">
+    <div class="muted">${g.titulo} · tarjeta ${practicaVer.i + 1} de ${items.length}</div>
+    <div class="big" style="margin-top:10px">${it.texto}</div>
+    <div class="pron">${it.pron || ""}</div>
+    <p><b>Significado:</b> ${it.es}</p>
+    <div class="row"><button class="btn sec" onclick="hablar('${esc(it.texto)}')">🔊 Escuchar</button></div>
+    <div class="row">
+      <button class="btn sec" onclick="moverPractica(-1)" ${practicaVer.i === 0 ? "disabled" : ""}>Anterior</button>
+      <button class="btn" onclick="moverPractica(1)">${practicaVer.i >= items.length - 1 ? "Terminar" : "Siguiente"}</button>
+    </div>
+    <div class="row"><button class="btn sec" onclick="salirPractica()">Volver a Prácticas</button></div>
+  </div>`;
+}
+function moverPractica(d){
+  const total = tarjetasPractica(practicaVer.n).length, nuevo = practicaVer.i + d;
+  if (nuevo >= total) return salirPractica();
+  practicaVer.i = Math.max(0, nuevo); render(); window.scrollTo(0, 0);
+}
+function salirPractica(){ practicaVer = null; render(); }
 
 function ruta(){
   if (sesionAct) return sesionRender();
