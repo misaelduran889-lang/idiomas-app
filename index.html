@@ -3887,6 +3887,25 @@ const IDIOMAS = {
           { id:"cp-oido2-26", texto:"The sun is going down.", pron:"", es:"El sol se está ocultando.", reg:"neutral" },
           { id:"cp-oido2-27", texto:"I arrive home before dark.", pron:"", es:"Llego a casa antes de oscurecer.", reg:"neutral" }
         ]},
+      { id:"cp-oido4-s", titulo:"Clase práctica 19: Videos 93 a 142 (parcial: 133, 136, 140)",
+        pasos:[ { tipo:"gancho", texto:"Frases de los videos del canal con traducción en pantalla." } ],
+        items:[
+          { id:"cp-oido4-0", texto:"My house is small.", pron:"", es:"Mi casa es pequeña.", reg:"neutral" },
+          { id:"cp-oido4-1", texto:"The door is open.", pron:"", es:"La puerta está abierta.", reg:"neutral" },
+          { id:"cp-oido4-2", texto:"The room is clean.", pron:"", es:"El cuarto está limpio.", reg:"neutral" },
+          { id:"cp-oido4-3", texto:"The table has food.", pron:"", es:"La mesa tiene comida.", reg:"neutral" },
+          { id:"cp-oido4-4", texto:"My bed is comfortable.", pron:"", es:"Mi cama es cómoda.", reg:"neutral" },
+          { id:"cp-oido4-5", texto:"Hi, how are you today?", pron:"", es:"Hola, ¿cómo estás hoy?", reg:"neutral" },
+          { id:"cp-oido4-6", texto:"I'm happy to see you.", pron:"", es:"Me alegra verte.", reg:"neutral" },
+          { id:"cp-oido4-7", texto:"How has your day been?", pron:"", es:"¿Cómo ha estado tu día?", reg:"neutral" },
+          { id:"cp-oido4-8", texto:"It's nice talking with you.", pron:"", es:"Es bueno hablar contigo.", reg:"neutral" },
+          { id:"cp-oido4-9", texto:"Have a great day!", pron:"", es:"¡Que tengas un buen día!", reg:"neutral" },
+          { id:"cp-oido4-10", texto:"Don't cry anymore.", pron:"", es:"Ya no llores más.", reg:"neutral" },
+          { id:"cp-oido4-11", texto:"Everything will be okay.", pron:"", es:"Todo estará bien.", reg:"neutral" },
+          { id:"cp-oido4-12", texto:"I am here for you.", pron:"", es:"Estoy aquí para ti.", reg:"neutral" },
+          { id:"cp-oido4-13", texto:"You are not alone.", pron:"", es:"No estás solo.", reg:"neutral" },
+          { id:"cp-oido4-14", texto:"Better days will come.", pron:"", es:"Vendrán días mejores.", reg:"neutral" }
+        ]},
       { id:"cp-oido3-s", titulo:"Clase práctica 18: Videos 51 a 92 (Entrena tu oído, lecturas y examen)",
         pasos:[ { tipo:"gancho", texto:"Frases y lecturas de los videos del canal, del 51 al 92." } ],
         items:[
@@ -4457,6 +4476,7 @@ const PRACTICAS = [
   { titulo: "Videos 19 a 33 · Entrena tu oído", sesiones: ["cp-oido-s"] },
   { titulo: "Videos 34 a 50 · Entrena tu oído", sesiones: ["cp-oido2-s"] },
   { titulo: "Videos 51 a 92 · Lecturas y Entrena tu oído", sesiones: ["cp-oido3-s"] },
+  { titulo: "Videos 93 a 142 · Entrena tu oído (parcial)", sesiones: ["cp-oido4-s"] },
 ];
 let practicaVer = null; // { n, i }
 const tarjetasPractica = n => PRACTICAS[n].sesiones.flatMap(id => (buscarSesion(id) || { items: [] }).items);
