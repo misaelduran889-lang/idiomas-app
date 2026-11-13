@@ -574,7 +574,9 @@ function responderJuego(j){
     if (q.opc[k] === q.correcta) b.classList.add("ok");
     else if (k === j) b.classList.add("mal");
   });
-  marcarFeedback(ok, q.correcta);
+  // Tras responder se muestra la respuesta completa: la letra y su pronunciación.
+  const explica = q.modo === "ver" && q.campo === "pron" ? `${q.it.texto} se pronuncia: ${q.it.pron}` : q.correcta;
+  marcarFeedback(ok, explica);
 }
 function marcarFeedback(ok, correcta){
   document.getElementById("fb").innerHTML = `
