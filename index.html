@@ -429,6 +429,7 @@ function sesionRender(){
   if (f === "explicar") fasePasos();
   else if (f === "tarjetas") faseTarjetas();
   else if (f === "juego") faseJuego();
+  else if (f === "recuerdo") faseRecuerdo();
   else faseResultado();
 }
 function faseCambiar(f){ sesionAct.fase = f; sesionAct.i = 0; sesionRender(); window.scrollTo(0, 0); }
@@ -481,14 +482,24 @@ function opciones(it, items, n, campo){
   const otros = shuffle(items.filter(x => x.id !== it.id)).slice(0, n - 1).map(x => x[campo]);
   return shuffle([it[campo], ...otros]);
 }
+// Tipos de pregunta: ver (elige significado), oir (escucha y elige), vf (verdadero o falso),
+// escribir (escribe la palabra). Se activan por sesión: las primeras son sencillas, luego se suman más.
+function preguntaVF(it, items){
+  const otros = items.filter(x => x.id !== it.id);
+  const verdadero = otros.length === 0 || Math.random() < 0.5;
+  const afirm = verdadero ? it.es : otros[Math.floor(Math.random() * otros.length)].es;
+  return { modo: "vf", it, afirm, opc: ["Verdadero", "Falso"], correcta: verdadero ? "Verdadero" : "Falso" };
+}
 function construirJuego(){
   const S = sesionAct, items = S.s.items;
   const idx = todasSesiones(estado.idioma).findIndex(x => x.id === S.s.id);
   const nOpc = idx < 2 ? 2 : idx < 4 ? 3 : 4;
   const preg = [];
-  for (const it of shuffle([...items])) preg.push({ modo: "ver", it, opc: opciones(it, items, nOpc, "es") });
-  if (idx >= 1) for (const it of shuffle([...items])) preg.push({ modo: "oir", it, opc: opciones(it, items, nOpc, "texto") });
-  S.preg = preg;
+  for (const it of items) preg.push({ modo: "ver", it, opc: opciones(it, items, nOpc, "es"), correcta: it.es });
+  if (idx >= 1) for (const it of items) preg.push({ modo: "oir", it, opc: opciones(it, items, nOpc, "texto"), correcta: it.texto });
+  if (idx >= 1) for (const it of items) preg.push(preguntaVF(it, items));
+  if (idx >= 2) for (const it of items) preg.push({ modo: "escribir", it, correcta: it.texto });
+  S.preg = shuffle(preg);
   items.forEach(it => primeraVez(it.id));
 }
 function faseJuego(){
@@ -496,35 +507,93 @@ function faseJuego(){
   if (!S.preg) construirJuego();
   if (S.n >= S.preg.length) return finalizar();
   const q = S.preg[S.n];
-  const cabeza = q.modo === "ver"
-    ? `<div class="muted">¿Qué significa?</div><div class="big" style="margin-top:6px">${q.it.texto}</div><div class="pron">${q.it.pron}</div>`
-    : `<div class="muted">Escucha y elige la palabra</div><div class="row"><button class="btn sec" onclick="hablar('${esc(q.it.texto)}')">🔊 Escuchar otra vez</button></div>`;
+  let cabeza;
+  if (q.modo === "ver") cabeza = `<div class="muted">¿Qué significa?</div><div class="big" style="margin-top:6px">${q.it.texto}</div><div class="pron">${q.it.pron}</div>`;
+  else if (q.modo === "oir") cabeza = `<div class="muted">Escucha y elige la palabra</div><div class="row"><button class="btn sec" onclick="hablar('${esc(q.it.texto)}')">🔊 Escuchar otra vez</button></div>`;
+  else if (q.modo === "vf") cabeza = `<div class="muted">Verdadero o falso</div><div class="big" style="margin-top:6px;font-size:22px">"${q.it.texto}" significa "${q.afirm}"</div>`;
+  else cabeza = `<div class="muted">Escribe la palabra en ${IDIOMAS[estado.idioma].nombre.toLowerCase()}</div><div class="big" style="margin-top:6px">${q.it.es}</div>`;
+  const cuerpo = q.modo === "escribir"
+    ? `<input id="resp" class="idi" style="width:100%;font-size:18px;padding:12px;margin-top:12px" autocomplete="off" autocapitalize="none" placeholder="Escríbela aquí">
+       <div class="row"><button class="btn" onclick="responderEscritura()">Comprobar</button></div>`
+    : `<div id="opc">${q.opc.map((o, j) => `<button class="opt" onclick="responderJuego(${j})">${o}</button>`).join("")}</div>`;
   app.innerHTML = `<div class="card">
-    <div class="muted">${S.s.titulo} · juego ${S.n + 1} de ${S.preg.length}</div>
+    <div class="muted">${S.s.titulo} · pregunta ${S.n + 1} de ${S.preg.length}</div>
     <div class="bar"><div style="width:${S.n / S.preg.length * 100}%"></div></div>
     <div style="margin-top:14px">${cabeza}</div>
-    <div id="opc">${q.opc.map((o, j) => `<button class="opt" onclick="responderJuego(${j})">${o}</button>`).join("")}</div>
+    ${cuerpo}
     <div id="fb"></div></div>`;
   if (q.modo === "oir") hablar(q.it.texto);
+  if (q.modo === "escribir") setTimeout(() => { const el = document.getElementById("resp"); if (el) el.focus(); }, 50);
 }
 function responderJuego(j){
   const S = sesionAct, q = S.preg[S.n];
-  const correcta = q.modo === "ver" ? q.it.es : q.it.texto;
-  const ok = q.opc[j] === correcta;
+  if (document.querySelector("#opc .opt:disabled")) return;
+  const ok = q.opc[j] === q.correcta;
   S.total++;
   if (ok) S.aciertos++; else S.fallos.add(q.it.id);
   document.querySelectorAll("#opc .opt").forEach((b, k) => {
     b.disabled = true;
-    if (q.opc[k] === correcta) b.classList.add("ok");
+    if (q.opc[k] === q.correcta) b.classList.add("ok");
     else if (k === j) b.classList.add("mal");
   });
+  marcarFeedback(ok, q.correcta);
+}
+function marcarFeedback(ok, correcta){
   document.getElementById("fb").innerHTML = `
     <p class="muted">${ok ? "✔ Correcto" : "✖ La respuesta era: " + correcta}</p>
     <div class="row"><button class="btn" onclick="siguienteJuego()">Siguiente</button></div>`;
 }
+// Escritura: compara lo escrito con la palabra, ignorando mayúsculas, espacios y signos.
+function responderEscritura(){
+  const S = sesionAct, q = S.preg[S.n];
+  const input = document.getElementById("resp");
+  if (input.disabled) return;
+  const norm = s => s.toLowerCase().replace(/\s+/g, "").replace(/[.,!?¿¡'’-]/g, "");
+  const ok = norm(input.value) === norm(q.it.texto);
+  input.disabled = true;
+  S.total++;
+  if (ok) S.aciertos++; else S.fallos.add(q.it.id);
+  marcarFeedback(ok, q.it.texto);
+}
 function siguienteJuego(){ sesionAct.n++; sesionRender(); window.scrollTo(0, 0); }
 
+// Al terminar los juegos: recuerdo completo (sin opciones) de cada palabra.
 function finalizar(){
+  const S = sesionAct;
+  S.fase = "recuerdo";
+  S.i = 0; S.revelado = false;
+  sesionRender();
+}
+function faseRecuerdo(){
+  const S = sesionAct, items = S.s.items;
+  if (S.i >= items.length) return cerrarRecuerdo();
+  const it = items[S.i];
+  const cuerpo = S.revelado
+    ? `<div class="big" style="margin-top:14px;color:var(--acc)">${it.texto}</div><div class="pron">${it.pron}</div>
+       <div class="row"><button class="btn sec" onclick="recordarItem(false)">No la recordé</button><button class="btn" onclick="recordarItem(true)">La recordé</button></div>`
+    : `<div class="row"><button class="btn sec" onclick="revelarRecuerdo()">Mostrar respuesta</button></div>`;
+  app.innerHTML = `<div class="card">
+    <div class="muted">${S.s.titulo} · recuerdo ${S.i + 1} de ${items.length}</div>
+    <div class="bar"><div style="width:${S.i / items.length * 100}%"></div></div>
+    <p class="muted" style="margin-top:12px">Sin mirar, ¿cómo se dice?</p>
+    <div class="big" style="font-size:24px">${it.es}</div>
+    ${cuerpo}
+  </div>`;
+}
+function revelarRecuerdo(){
+  const S = sesionAct;
+  S.revelado = true;
+  hablar(S.s.items[S.i].texto);
+  faseRecuerdo();
+}
+function recordarItem(ok){
+  const S = sesionAct, it = S.s.items[S.i];
+  S.total++;
+  if (ok) S.aciertos++; else S.fallos.add(it.id);
+  S.i++; S.revelado = false;
+  faseRecuerdo();
+}
+function cerrarRecuerdo(){
   const S = sesionAct;
   S.s.items.forEach(it => programar(it.id, !S.fallos.has(it.id)));
   S.fase = "resultado";
