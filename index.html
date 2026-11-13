@@ -31,6 +31,9 @@
   .bar { height:8px; background:#0f1626; border-radius:99px; overflow:hidden; margin-top:6px; }
   .bar > div { height:100%; background:var(--acc); }
   .pad { height:80px; }
+  .letra { font-size:96px; font-weight:800; text-align:center; line-height:1.1; margin:12px 0; }
+  .sub { font-size:20px; margin:6px 0 10px; }
+  .reto { text-align:center; margin:14px 0; }
 </style>
 </head>
 <body>
@@ -61,6 +64,14 @@ const CURSOS = {
       { id:"i4", texto:"Ice cream", pron:"ÁIS KRÍM", es:"Helado", reg:"neutral", img:"img/icecream.jpg",
         partes:[ { t:"ice", pron:"ÁIS", es:"hielo (solo)" }, { t:"cream", pron:"KRÍM", es:"crema o nata (solo)" } ],
         otro:"Significados secundarios: 'ice' también puede ser 'congelar', y 'cream' puede ser 'crema' para la piel." }
+    ]},
+    { id: "ing-2", titulo: "Sonidos difíciles", items: [], pasos: [
+      { tipo:"gancho", texto:"¿Por qué 'Father' no suena igual que 'Fáder' en español? Vamos a verlo con la boca." },
+      { tipo:"boca", grande:"th", say:"Father", titulo:"El sonido 'th'", pron:"suave, como una d con la lengua afuera", texto:"Pon la punta de la lengua entre los dientes, sin morderla. Vibra la garganta y sopla un poco." },
+      { tipo:"regla", titulo:"Regla 1: la MAYÚSCULA es la sílaba fuerte", grande:"FÁ-der", pron:"Father", say:"Father", texto:"En FÁ-der la fuerza va en FÁ. En inglés el acento marca cuál sílaba se dice más fuerte." },
+      { tipo:"pieza", grande:"Ice cream", pron:"ÁIS KRÍM", say:"Ice cream", texto:"Son dos piezas: 'ice' (hielo) más 'cream' (crema). Juntas significan helado. Las palabras compuestas se arman sumando piezas." },
+      { tipo:"reto", pregunta:"¿Cómo se dice 'helado' en inglés?", respuesta:"Ice cream (ÁIS KRÍM)" },
+      { tipo:"resumen", texto:"1) La 'th' lleva la lengua entre los dientes. 2) La sílaba fuerte va en MAYÚSCULA. 3) Palabra compuesta = suma de piezas." }
     ]}
   ]},
   coreano: { nombre: "Coreano", lecciones: [
@@ -68,6 +79,15 @@ const CURSOS = {
       { id:"c1", texto:"안녕하세요", pron:"ANYÓNG-HA-SÉ-YO", es:"Hola (formal)", reg:"formal", img:"img/hola-formal.jpg", partes:null },
       { id:"c2", texto:"안녕", pron:"ANYÓNG", es:"Hola (informal, con amigos)", reg:"informal", img:"img/hola-informal.jpg", partes:null },
       { id:"c3", texto:"감사합니다", pron:"KAMSA-HAMNIDA", es:"Gracias (formal)", reg:"formal", img:"img/gracias.jpg", partes:null }
+    ]},
+    { id: "cor-2", titulo: "Tu primera sílaba", items: [], pasos: [
+      { tipo:"gancho", texto:"El coreano se escribe en bloques. Cada bloque es una sílaba. Vamos a armar la primera." },
+      { tipo:"pieza", grande:"ㄱ", pron:"g suave", texto:"Esta es la consonante ㄱ. Al inicio suena como una 'g' suave." },
+      { tipo:"pieza", grande:"ㅏ", pron:"a", texto:"Esta es la vocal ㅏ. Suena como la 'a' de 'casa'." },
+      { tipo:"regla", titulo:"Regla 1: vocal vertical → a la derecha", grande:"가", pron:"ga", say:"가", texto:"La vocal vertical siempre va a la derecha de la consonante. Por eso ㄱ + ㅏ = 가." },
+      { tipo:"boca", grande:"ㅏ", titulo:"La boca para la 'a'", pron:"boca bien abierta", texto:"Abre la boca grande y deja la lengua baja. Si cierras la boca, el sonido cambia." },
+      { tipo:"reto", pregunta:"¿Puedes leer esta palabra?", grande:"바나나", respuesta:"ba-na-na (banana)", say:"바나나" },
+      { tipo:"resumen", texto:"Consonante + vocal = sílaba. Vocal vertical va a la derecha. La vocal horizontal va abajo: eso lo vemos en la siguiente clase." }
     ]}
   ]}
 };
@@ -161,11 +181,62 @@ function mostrarTarjeta(it){
 
 function responder(id, ok){ programar(id, ok); estudiar(); }
 
+// ---------- Clases paso a paso (método: pregunta, piezas, regla, boca, reto, resumen) ----------
+let claseAct = null, pasoAct = 0, relojReto = null;
+const TIPO_TXT = { gancho:"Pregunta", pieza:"Pieza", regla:"Regla", boca:"Boca", reto:"Tu turno", resumen:"Resumen" };
+
 function clases(){
   app.innerHTML = Object.entries(CURSOS).map(([k, c]) => `
     <div class="card"><div class="big">${c.nombre}</div>
-      ${c.lecciones.map(l => `<p>📘 ${l.titulo} · ${l.items.length} palabras</p>`).join("")}
+      ${c.lecciones.map(l => l.pasos
+        ? `<p>📘 ${l.titulo} · ${l.pasos.length} pasos <button class="btn" onclick="abrirClase('${k}','${l.id}')">Empezar</button></p>`
+        : `<p>📘 ${l.titulo} · ${l.items.length} palabras</p>`).join("")}
     </div>`).join("");
+}
+
+function abrirClase(k, lid){ claseAct = { k, lid }; pasoAct = 0; mostrarPaso(); }
+function paso(d){ pasoAct += d; mostrarPaso(); window.scrollTo(0, 0); }
+
+function mostrarPaso(){
+  clearInterval(relojReto);
+  const lec = CURSOS[claseAct.k].lecciones.find(l => l.id === claseAct.lid);
+  const p = lec.pasos[pasoAct], n = lec.pasos.length;
+  const reto = p.tipo === "reto" ? `
+    <div class="reto">
+      <div class="muted" id="cuenta">Piénsalo… 3</div>
+      <div class="pron" id="resp" style="display:none">${p.respuesta}</div>
+    </div>` : "";
+  app.innerHTML = `
+    <div class="card">
+      <div class="muted">${lec.titulo} · paso ${pasoAct + 1} de ${n}</div>
+      <div class="bar"><div style="width:${(pasoAct + 1) / n * 100}%"></div></div>
+      <div style="margin-top:14px"><span class="tag">${TIPO_TXT[p.tipo]}</span></div>
+      ${p.titulo ? `<div class="sub">${p.titulo}</div>` : ""}
+      ${p.grande ? `<div class="letra">${p.grande}</div>` : ""}
+      ${p.pron ? `<div class="pron">${p.pron}</div>` : ""}
+      ${p.tipo === "reto" ? `<div class="big" style="font-size:22px">${p.pregunta}</div>` : ""}
+      <p>${p.texto || ""}</p>
+      ${reto}
+      ${p.say ? `<div class="row"><button class="btn sec" onclick="hablar('${p.say}')">🔊 Escuchar</button></div>` : ""}
+      <div class="row">
+        ${pasoAct > 0 ? `<button class="btn sec" onclick="paso(-1)">Atrás</button>` : ""}
+        ${pasoAct < n - 1
+          ? `<button class="btn" onclick="paso(1)">Siguiente</button>`
+          : `<button class="btn" onclick="ir('clases')">Terminar lección</button>`}
+      </div>
+    </div>`;
+  if (p.tipo === "reto") {
+    let t = 3;
+    relojReto = setInterval(() => {
+      t--;
+      const c = document.getElementById("cuenta"), r = document.getElementById("resp");
+      if (!c || !r) { clearInterval(relojReto); return; }
+      if (t > 0) { c.textContent = "Piénsalo… " + t; return; }
+      clearInterval(relojReto);
+      c.style.display = "none";
+      r.style.display = "block";
+    }, 1000);
+  }
 }
 
 function mapa(){
@@ -197,7 +268,7 @@ function voz(texto, esKo){
   speechSynthesis.speak(u);
 }
 
-function ir(v){ vista = v; render(); }
+function ir(v){ clearInterval(relojReto); vista = v; render(); }
 document.querySelectorAll("nav button").forEach(b => b.onclick = () => ir(b.dataset.view));
 
 // Registro de la PWA (instalable en Chrome y Android)
