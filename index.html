@@ -556,15 +556,15 @@ function faseResultado(){
 // Cada línea: lo que dice el profesor, su traducción, la respuesta esperada y las palabras clave que la validan.
 const ESCENAS = {
   ingles: { titulo: "Llamada: saludos", lang: "en-US", lineas: [
-    { p:"Hello! How are you today?", es:"¡Hola! ¿Cómo estás hoy?", tu:"I'm fine, thank you.", tuEs:"Estoy bien, gracias.", clave:["fine"] },
-    { p:"Nice to meet you. What is your name?", es:"Mucho gusto. ¿Cuál es tu nombre?", tu:"My name is Kevin.", tuEs:"Mi nombre es Kevin.", clave:["my", "name"] },
-    { p:"Good morning! Would you like some coffee?", es:"¡Buenos días! ¿Quieres café?", tu:"Yes, please.", tuEs:"Sí, por favor.", clave:["yes"] },
-    { p:"Thank you for coming. See you tomorrow!", es:"Gracias por venir. ¡Nos vemos mañana!", tu:"See you tomorrow, bye!", tuEs:"¡Nos vemos mañana, adiós!", clave:["see", "you"] }
+    { p:"Hello! How are you today?", pr:"JELÓ! JAU AR YU TUDÉI?", es:"¡Hola! ¿Cómo estás hoy?", tu:"I'm fine, thank you.", tuPr:"AIM FÁIN, ZÁNK YU", tuEs:"Estoy bien, gracias.", clave:["fine"] },
+    { p:"Nice to meet you. What is your name?", pr:"NÁIS TU MÍT YU. UÁT IS YUR NÉIM?", es:"Mucho gusto. ¿Cuál es tu nombre?", tu:"My name is Kevin.", tuPr:"MÁI NÉIM IS KÉVIN", tuEs:"Mi nombre es Kevin.", clave:["my", "name"] },
+    { p:"Good morning! Would you like some coffee?", pr:"GUD MÓRNIN! UUD YU LÁIK SAM KÓFI?", es:"¡Buenos días! ¿Quieres café?", tu:"Yes, please.", tuPr:"YES, PLIS", tuEs:"Sí, por favor.", clave:["yes"] },
+    { p:"Thank you for coming. See you tomorrow!", pr:"ZÁNK YU FOR KÁMIN. SI YU TUMÁRO!", es:"Gracias por venir. ¡Nos vemos mañana!", tu:"See you tomorrow, bye!", tuPr:"SI YU TUMÁRO, BÁI", tuEs:"¡Nos vemos mañana, adiós!", clave:["see", "you"] }
   ]},
   coreano: { titulo: "Llamada: saludos", lang: "ko-KR", lineas: [
-    { p:"안녕하세요! 오늘 어떻게 지내요?", es:"¡Hola! ¿Cómo estás hoy?", tu:"네, 잘 지내요.", tuEs:"Sí, estoy bien.", clave:["잘"] },
-    { p:"만나서 반가워요. 이름은 뭐예요?", es:"Mucho gusto. ¿Cuál es tu nombre?", tu:"제 이름은 Kevin이에요.", tuEs:"Mi nombre es Kevin.", clave:["이름은"] },
-    { p:"감사합니다! 내일 봐요.", es:"¡Gracias! Nos vemos mañana.", tu:"네, 내일 봐요.", tuEs:"Sí, nos vemos mañana.", clave:["내일"] }
+    { p:"안녕하세요! 오늘 어떻게 지내요?", pr:"ANYÓNG-HA-SÉ-YO! O-NEUL O-TÓ-KE JI-NÉ-YO?", es:"¡Hola! ¿Cómo estás hoy?", tu:"네, 잘 지내요.", tuPr:"NE, JAL JI-NÉ-YO", tuEs:"Sí, estoy bien.", clave:["잘"] },
+    { p:"만나서 반가워요. 이름은 뭐예요?", pr:"MAN-NA-SÓ BAN-GA-UÓ-YO. I-REUM-EUN MWÓ-YE-YO?", es:"Mucho gusto. ¿Cuál es tu nombre?", tu:"제 이름은 Kevin이에요.", tuPr:"JE I-REUM-EUN KÉVIN-I-É-YO", tuEs:"Mi nombre es Kevin.", clave:["이름은"] },
+    { p:"감사합니다! 내일 봐요.", pr:"KAM-SA-HAM-NI-DA! NE-IL BWA-YO.", es:"¡Gracias! Nos vemos mañana.", tu:"네, 내일 봐요.", tuPr:"NE, NE-IL BWA-YO", tuEs:"Sí, nos vemos mañana.", clave:["내일"] }
   ]}
 };
 const AVATAR_MAESTRO = `
@@ -607,8 +607,10 @@ function llamada(){
     <div class="muted" style="text-align:center">Profesor Mateo</div>
     <div class="subt">
       <div class="big" style="font-size:20px">${L.p}</div>
+      <div class="pron">${L.pr}</div>
       <p class="muted">${L.es}</p>
       <p><b>Tu turno:</b> ${L.tu}</p>
+      <div class="pron">${L.tuPr}</div>
       <p class="muted">${L.tuEs}</p>
       <div id="fbl" class="muted">${llamadaEst.fb}</div>
       <div class="row">
