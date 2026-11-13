@@ -1,4 +1,4 @@
-const CACHE = "mi-tutor-v32";
+const CACHE = "mi-tutor-v33";
 const ARCHIVOS = ["./", "./index.html", "./manifest.json", "./icon.svg",
   "./img/fondo-llamada.jpg", "./img/cabecera-ruta.jpg", "./img/fondo-hoy.jpg",
   "./img/fondo-repasar.jpg", "./img/fondo-mapa.jpg", "./img/celebracion.jpg"];
