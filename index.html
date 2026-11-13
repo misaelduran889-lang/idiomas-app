@@ -36,6 +36,11 @@
   .ses { display:flex; justify-content:space-between; align-items:center; gap:10px; padding:10px 0; border-bottom:1px solid var(--line); }
   .ses.bloq { opacity:.45; }
   .idi { background:var(--panel); color:var(--txt); border:1px solid var(--line); border-radius:8px; padding:6px; font-size:14px; }
+  .llam { background:linear-gradient(#2a2f6b, #0b1220); border:1px solid var(--line); border-radius:18px; padding:14px; }
+  .avatar { width:200px; display:block; margin:6px auto 0; }
+  .habla .boca { animation: boca .22s infinite alternate; transform-box: fill-box; transform-origin: center; }
+  @keyframes boca { from { transform: scaleY(.3); } to { transform: scaleY(2); } }
+  .subt { background:rgba(15,22,38,.88); border:1px solid var(--line); border-radius:14px; padding:14px; margin-top:12px; }
   .pad { height:80px; }
   table td { padding:6px 4px; border-bottom:1px solid var(--line); }
 </style>
@@ -53,6 +58,7 @@
   <button data-view="hoy" class="on">Hoy</button>
   <button data-view="estudiar">Repasar</button>
   <button data-view="ruta">Ruta</button>
+  <button data-view="llamada">Llamada</button>
   <button data-view="mapa">Mapa</button>
 </nav>
 
@@ -328,7 +334,7 @@ let sesionAct = null;
 
 function render(){
   document.querySelectorAll("nav button").forEach(b => b.classList.toggle("on", b.dataset.view === vista));
-  ({ hoy, estudiar, ruta, mapa }[vista])();
+  ({ hoy, estudiar, ruta, llamada, mapa }[vista])();
 }
 function ir(v){ sesionAct = null; vista = v; render(); window.scrollTo(0, 0); }
 document.querySelectorAll("nav button").forEach(b => b.onclick = () => ir(b.dataset.view));
@@ -544,6 +550,119 @@ function faseResultado(){
       ${!pasa ? `<button class="btn" onclick="empezarSesion('${S.s.id}')">Repetir</button>` : ""}
       <button class="btn sec" onclick="salirSesion()">Volver a la ruta</button>
     </div></div>`;
+}
+
+// ---------- Modo llamada: profesor (avatar masculino) con diálogo, pronunciación y práctica de voz ----------
+// Cada línea: lo que dice el profesor, su traducción, la respuesta esperada y las palabras clave que la validan.
+const ESCENAS = {
+  ingles: { titulo: "Llamada: saludos", lang: "en-US", lineas: [
+    { p:"Hello! How are you today?", es:"¡Hola! ¿Cómo estás hoy?", tu:"I'm fine, thank you.", tuEs:"Estoy bien, gracias.", clave:["fine"] },
+    { p:"Nice to meet you. What is your name?", es:"Mucho gusto. ¿Cuál es tu nombre?", tu:"My name is Kevin.", tuEs:"Mi nombre es Kevin.", clave:["my", "name"] },
+    { p:"Good morning! Would you like some coffee?", es:"¡Buenos días! ¿Quieres café?", tu:"Yes, please.", tuEs:"Sí, por favor.", clave:["yes"] },
+    { p:"Thank you for coming. See you tomorrow!", es:"Gracias por venir. ¡Nos vemos mañana!", tu:"See you tomorrow, bye!", tuEs:"¡Nos vemos mañana, adiós!", clave:["see", "you"] }
+  ]},
+  coreano: { titulo: "Llamada: saludos", lang: "ko-KR", lineas: [
+    { p:"안녕하세요! 오늘 어떻게 지내요?", es:"¡Hola! ¿Cómo estás hoy?", tu:"네, 잘 지내요.", tuEs:"Sí, estoy bien.", clave:["잘"] },
+    { p:"만나서 반가워요. 이름은 뭐예요?", es:"Mucho gusto. ¿Cuál es tu nombre?", tu:"제 이름은 Kevin이에요.", tuEs:"Mi nombre es Kevin.", clave:["이름은"] },
+    { p:"감사합니다! 내일 봐요.", es:"¡Gracias! Nos vemos mañana.", tu:"네, 내일 봐요.", tuEs:"Sí, nos vemos mañana.", clave:["내일"] }
+  ]}
+};
+const AVATAR_MAESTRO = `
+<svg viewBox="0 0 200 250" id="avatar" class="avatar" aria-label="Profesor Mateo">
+  <path d="M28 250 Q36 178 100 172 Q164 178 172 250 Z" fill="#2b4a7a"/>
+  <path d="M84 172 L100 200 L116 172 Z" fill="#f1f5f9"/>
+  <rect x="88" y="142" width="24" height="36" fill="#d9a77c"/>
+  <ellipse cx="100" cy="104" rx="46" ry="54" fill="#f0c49a"/>
+  <path d="M54 96 Q50 46 100 42 Q152 46 146 96 Q140 70 100 68 Q68 70 54 96 Z" fill="#2a1d14"/>
+  <circle cx="82" cy="104" r="13" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <circle cx="118" cy="104" r="13" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <line x1="95" y1="104" x2="105" y2="104" stroke="#1f2937" stroke-width="3"/>
+  <circle cx="82" cy="104" r="3.5" fill="#1f2937"/>
+  <circle cx="118" cy="104" r="3.5" fill="#1f2937"/>
+  <ellipse class="boca" cx="100" cy="132" rx="10" ry="4" fill="#8b3a3a"/>
+</svg>`;
+let llamadaEst = null;
+const RECO = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+function llamada(){
+  const k = estado.idioma, E = ESCENAS[k];
+  if (!E){ app.innerHTML = `<div class="card"><p>Aún no hay llamada para este idioma.</p></div>`; return; }
+  if (!llamadaEst || llamadaEst.k !== k) llamadaEst = { k, i: 0, ok: 0, hablado: -1, fb: "", respondida: false };
+  const total = E.lineas.length, fin = llamadaEst.i >= total;
+  if (fin){
+    app.innerHTML = `<div class="llam">
+      <div class="big">Llamada terminada</div>
+      <p class="muted">Respondiste bien ${llamadaEst.ok} de ${total}.</p>
+      <div class="row"><button class="btn" onclick="reiniciarLlamada()">Repetir llamada</button></div>
+    </div>`;
+    return;
+  }
+  const L = E.lineas[llamadaEst.i];
+  if (llamadaEst.hablado !== llamadaEst.i){ llamadaEst.hablado = llamadaEst.i; decirMaestro(L.p); }
+  const hayVoz = !!RECO;
+  app.innerHTML = `<div class="llam">
+    <div class="muted">${E.titulo} · ${llamadaEst.i + 1} de ${total}</div>
+    <div class="bar"><div style="width:${llamadaEst.i / total * 100}%"></div></div>
+    ${AVATAR_MAESTRO}
+    <div class="muted" style="text-align:center">Profesor Mateo</div>
+    <div class="subt">
+      <div class="big" style="font-size:20px">${L.p}</div>
+      <p class="muted">${L.es}</p>
+      <p><b>Tu turno:</b> ${L.tu}</p>
+      <p class="muted">${L.tuEs}</p>
+      <div id="fbl" class="muted">${llamadaEst.fb}</div>
+      <div class="row">
+        <button class="btn sec" onclick="decirMaestro('${esc(L.p)}')">🔊 Escuchar</button>
+        ${llamadaEst.respondida
+          ? `<button class="btn" onclick="siguienteLinea()">Siguiente</button>`
+          : `${hayVoz ? `<button class="btn" onclick="escucharUsuario()">🎤 Hablar</button>` : ""}
+             <button class="btn sec" onclick="autoevaluar(true)">✔ Lo dije bien</button>
+             <button class="btn sec" onclick="autoevaluar(false)">✖ No me salió</button>`}
+      </div>
+    </div>
+  </div>`;
+}
+function reiniciarLlamada(){ llamadaEst = null; llamada(); }
+function decirMaestro(t){
+  const el = document.getElementById("avatar");
+  if (el) el.classList.add("habla");
+  hablar(t);
+  clearTimeout(decirMaestro.t);
+  decirMaestro.t = setTimeout(() => { const e = document.getElementById("avatar"); if (e) e.classList.remove("habla"); }, 1200 + t.length * 70);
+}
+function escucharUsuario(){
+  const r = new RECO();
+  r.lang = ESCENAS[llamadaEst.k].lang;
+  r.interimResults = false;
+  r.maxAlternatives = 1;
+  r.onresult = e => evaluar(e.results[0][0].transcript);
+  r.onerror = () => { document.getElementById("fbl").textContent = "No te escuché bien. Intenta otra vez o usa los botones."; };
+  r.start();
+}
+// Evalúa lo que dijo el alumno (voz) contra las palabras clave de la línea.
+function evaluar(texto){
+  const L = ESCENAS[llamadaEst.k].lineas[llamadaEst.i];
+  const t = texto.toLowerCase().replace(/[.,!?¿¡]/g, "");
+  const ok = L.clave.every(w => t.includes(w));
+  marcar(ok, ok ? "✔ ¡Muy bien!" : `Casi. Di algo como: "${L.tu}"`);
+}
+// Marca la respuesta de la línea actual (una sola vez) y muestra el botón Siguiente.
+function marcar(ok, aviso){
+  if (llamadaEst.respondida) return;
+  llamadaEst.respondida = true;
+  if (ok) llamadaEst.ok++;
+  llamadaEst.fb = aviso;
+  llamada();
+}
+function autoevaluar(ok){
+  const L = ESCENAS[llamadaEst.k].lineas[llamadaEst.i];
+  marcar(ok, ok ? "✔ ¡Muy bien!" : `Vuelve a intentarlo. Frase: "${L.tu}"`);
+}
+function siguienteLinea(){
+  llamadaEst.i++;
+  llamadaEst.respondida = false;
+  llamadaEst.fb = "";
+  llamada();
 }
 
 // ---------- Audio por palabra: MP3 si existe (audio/en o audio/ko), si no voz del navegador ----------
