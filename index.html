@@ -517,9 +517,12 @@ function construirJuego(){
   const S = sesionAct, items = S.s.items;
   // La práctica libre usa todos los tipos de pregunta (idx alto).
   const idx = S.s.id === "libre" ? 99 : todasSesiones(estado.idioma).findIndex(x => x.id === S.s.id);
-  const nOpc = idx < 2 ? 2 : idx < 4 ? 3 : 4;
+  // Siempre 4 respuestas (o menos si la sesión tiene menos palabras).
+  const nOpc = Math.min(4, items.length);
+  // Si todas las palabras tienen pronunciación, la pregunta pide la pronunciación (la respuesta no se muestra en el enunciado).
+  const campoVer = items.every(x => x.pron) ? "pron" : "es";
   const preg = [];
-  for (const it of items) preg.push({ modo: "ver", it, opc: opciones(it, items, nOpc, "es"), correcta: it.es });
+  for (const it of items) preg.push({ modo: "ver", it, campo: campoVer, opc: opciones(it, items, nOpc, campoVer), correcta: it[campoVer] });
   if (idx >= 1) for (const it of items) preg.push({ modo: "oir", it, opc: opciones(it, items, nOpc, "texto"), correcta: it.texto });
   if (idx >= 1) for (const it of items) preg.push(preguntaVF(it, items));
   if (idx >= 2) for (const it of items) preg.push({ modo: "escribir", it, correcta: it.texto });
@@ -532,7 +535,9 @@ function faseJuego(){
   if (S.n >= S.preg.length) return finalizar();
   const q = S.preg[S.n];
   let cabeza;
-  if (q.modo === "ver") cabeza = `<div class="muted">¿Qué significa?</div><div class="big" style="margin-top:6px">${q.it.texto}</div><div class="pron">${q.it.pron}</div>`;
+  if (q.modo === "ver") cabeza = q.campo === "pron"
+    ? `<div class="muted">¿Cómo se pronuncia?</div><div class="big" style="margin-top:6px">${q.it.texto}</div>`
+    : `<div class="muted">¿Qué significa?</div><div class="big" style="margin-top:6px">${q.it.texto}</div>`;
   else if (q.modo === "oir") cabeza = `<div class="muted">Escucha y elige la palabra</div><div class="row"><button class="btn sec" onclick="hablar('${esc(q.it.texto)}')">🔊 Escuchar otra vez</button></div>`;
   else if (q.modo === "vf") cabeza = `<div class="muted">Verdadero o falso</div><div class="big" style="margin-top:6px;font-size:22px">"${q.it.texto}" significa "${q.afirm}"</div>`;
   else cabeza = `<div class="muted">Escribe la palabra en ${IDIOMAS[estado.idioma].nombre.toLowerCase()}</div><div class="big" style="margin-top:6px">${q.it.es}</div>`;
