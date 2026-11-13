@@ -517,10 +517,12 @@ function opciones(it, items, n, campo){
 // Tipos de pregunta: ver (elige significado), oir (escucha y elige), vf (verdadero o falso),
 // escribir (escribe la palabra). Se activan por sesión: las primeras son sencillas, luego se suman más.
 function preguntaVF(it, items){
-  const otros = items.filter(x => x.id !== it.id);
+  // Con letras: "M se pronuncia EM" (verdadero o falso sobre la pronunciación, nunca sobre otra palabra).
+  const campo = items.every(x => x.pron) ? "pron" : "es";
+  const otros = items.filter(x => x.id !== it.id && x[campo] !== it[campo]);
   const verdadero = otros.length === 0 || Math.random() < 0.5;
-  const afirm = verdadero ? it.es : otros[Math.floor(Math.random() * otros.length)].es;
-  return { modo: "vf", it, afirm, opc: ["Verdadero", "Falso"], correcta: verdadero ? "Verdadero" : "Falso" };
+  const afirm = verdadero ? it[campo] : otros[Math.floor(Math.random() * otros.length)][campo];
+  return { modo: "vf", it, campo, afirm, opc: ["Verdadero", "Falso"], correcta: verdadero ? "Verdadero" : "Falso" };
 }
 function construirJuego(){
   const S = sesionAct, items = S.s.items;
@@ -548,7 +550,9 @@ function faseJuego(){
     ? `<div class="muted">¿Cómo se pronuncia?</div><div class="big" style="margin-top:6px">${q.it.texto}</div>`
     : `<div class="muted">¿Qué significa?</div><div class="big" style="margin-top:6px">${q.it.texto}</div>`;
   else if (q.modo === "oir") cabeza = `<div class="muted">Escucha y elige la palabra</div><div class="row"><button class="btn sec" onclick="hablar('${esc(q.it.texto)}')">🔊 Escuchar otra vez</button></div>`;
-  else if (q.modo === "vf") cabeza = `<div class="muted">Verdadero o falso</div><div class="big" style="margin-top:6px;font-size:22px">"${q.it.texto}" significa "${q.afirm}"</div>`;
+  else if (q.modo === "vf") cabeza = q.campo === "pron"
+    ? `<div class="muted">Verdadero o falso</div><div class="big" style="margin-top:6px;font-size:22px">"${q.it.texto}" se pronuncia "${q.afirm}"</div>`
+    : `<div class="muted">Verdadero o falso</div><div class="big" style="margin-top:6px;font-size:22px">"${q.it.texto}" significa "${q.afirm}"</div>`;
   else cabeza = `<div class="muted">Escribe la palabra en ${IDIOMAS[estado.idioma].nombre.toLowerCase()}</div><div class="big" style="margin-top:6px">${q.it.es}</div>`;
   const cuerpo = q.modo === "escribir"
     ? `<input id="resp" class="idi" style="width:100%;font-size:18px;padding:12px;margin-top:12px" autocomplete="off" autocapitalize="none" placeholder="Escríbela aquí">
