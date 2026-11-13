@@ -10,7 +10,7 @@
   :root { --bg:#0b1220; --panel:#151d2e; --line:#26324a; --txt:#e8edf7; --sub:#93a0b8; --acc:#4ade80; --warn:#fb923c; }
   * { box-sizing: border-box; }
   body { margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; background:var(--bg); color:var(--txt); min-height:100vh; }
-  header { padding:16px 18px; border-bottom:1px solid var(--line); display:flex; justify-content:space-between; align-items:center; }
+  header { padding:16px 18px; border-bottom:1px solid var(--line); display:flex; justify-content:space-between; align-items:center; gap:10px; }
   header h1 { font-size:20px; margin:0; }
   main { max-width:720px; margin:0 auto; padding:16px; }
   nav { position:fixed; bottom:0; left:0; right:0; background:var(--panel); border-top:1px solid var(--line); display:flex; justify-content:space-around; padding:8px 0; }
@@ -21,25 +21,29 @@
   .btn.sec { background:transparent; color:var(--txt); border:1px solid var(--line); }
   .muted { color:var(--sub); font-size:14px; }
   .big { font-size:30px; font-weight:700; }
+  .sub { font-size:20px; margin:6px 0 10px; font-weight:600; }
+  .letra { font-size:88px; font-weight:800; text-align:center; line-height:1.1; margin:12px 0; }
   .pron { font-size:20px; color:var(--acc); margin:6px 0; }
   .tag { display:inline-block; font-size:12px; padding:3px 9px; border-radius:99px; border:1px solid var(--line); color:var(--sub); margin-right:6px; }
   .tag.formal { color:#60a5fa; } .tag.informal { color:var(--warn); }
-  .parts { display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-top:12px; }
-  .part { background:#0f1626; border:1px solid var(--line); border-radius:10px; padding:10px; }
-  .img { width:100%; height:180px; object-fit:cover; border-radius:12px; background:#0f1626; margin-bottom:10px; }
   .row { display:flex; gap:10px; flex-wrap:wrap; margin-top:12px; }
   .bar { height:8px; background:#0f1626; border-radius:99px; overflow:hidden; margin-top:6px; }
-  .bar > div { height:100%; background:var(--acc); }
+  .bar > div { height:100%; background:var(--acc); transition:width .3s; }
+  .opt { display:block; width:100%; text-align:left; margin-top:10px; background:#0f1626; border:1px solid var(--line); color:var(--txt); border-radius:10px; padding:12px 14px; font-size:16px; cursor:pointer; }
+  .opt:disabled { cursor:default; }
+  .opt.ok { border-color:var(--acc); color:var(--acc); }
+  .opt.mal { border-color:var(--warn); color:var(--warn); }
+  .ses { display:flex; justify-content:space-between; align-items:center; gap:10px; padding:10px 0; border-bottom:1px solid var(--line); }
+  .ses.bloq { opacity:.45; }
+  .idi { background:var(--panel); color:var(--txt); border:1px solid var(--line); border-radius:8px; padding:6px; font-size:14px; }
   .pad { height:80px; }
-  .letra { font-size:96px; font-weight:800; text-align:center; line-height:1.1; margin:12px 0; }
-  .sub { font-size:20px; margin:6px 0 10px; }
-  .reto { text-align:center; margin:14px 0; }
+  table td { padding:6px 4px; border-bottom:1px solid var(--line); }
 </style>
 </head>
 <body>
 <header>
   <h1>🎓 Mi tutor</h1>
-  <span class="muted" id="streak"></span>
+  <select class="idi" id="idioma" aria-label="Idioma"></select>
 </header>
 
 <main id="app"></main>
@@ -47,214 +51,505 @@
 
 <nav>
   <button data-view="hoy" class="on">Hoy</button>
-  <button data-view="estudiar">Estudiar</button>
-  <button data-view="clases">Clases</button>
+  <button data-view="estudiar">Repasar</button>
+  <button data-view="ruta">Ruta</button>
   <button data-view="mapa">Mapa</button>
 </nav>
 
 <script>
-// ---------- Datos de ejemplo (etapa 1) ----------
-// Cada entrada: idioma, texto, pronunciación en español, significado, registro, imagen y partes (para compuestas).
-const CURSOS = {
-  ingles: { nombre: "Inglés", lecciones: [
-    { id: "ing-1", titulo: "Saludos y familia", items: [
-      { id:"i1", texto:"Hello", pron:"JELÓ", es:"Hola (formal, con personas que no conoces)", reg:"formal", img:"img/hello.jpg", partes:null },
-      { id:"i2", texto:"Hi", pron:"JÁI", es:"Hola (informal, con amigos)", reg:"informal", img:"img/hi.jpg", partes:null },
-      { id:"i3", texto:"Father", pron:"FÁ-der", es:"Padre", reg:"neutral", img:"img/father.jpg", nota:"La 'th' se hace con la punta de la lengua entre los dientes.", partes:null },
-      { id:"i4", texto:"Ice cream", pron:"ÁIS KRÍM", es:"Helado", reg:"neutral", img:"img/icecream.jpg",
-        partes:[ { t:"ice", pron:"ÁIS", es:"hielo (solo)" }, { t:"cream", pron:"KRÍM", es:"crema o nata (solo)" } ],
-        otro:"Significados secundarios: 'ice' también puede ser 'congelar', y 'cream' puede ser 'crema' para la piel." }
+// ---------- Contenido ----------
+// Cada idioma es una academia independiente: unidades -> sesiones.
+// Cada sesión: pasos (explicación paso a paso) + items (máximo 20 palabras).
+// Para añadir un idioma nuevo, copia la estructura y cambia el contenido.
+const IDIOMAS = {
+  ingles: { nombre: "Inglés", unidades: [
+    { titulo: "1. Abecedario", sesiones: [
+      { id:"in-1a", titulo:"Letras A a J",
+        pasos:[
+          { tipo:"gancho", texto:"El alfabeto inglés tiene 26 letras. Hoy aprendemos las diez primeras con su nombre. Ojo: el nombre de la letra no siempre es su sonido." },
+          { tipo:"pieza", grande:"A  B  C", pron:"EI  BI  SI", texto:"Así se dicen las letras A, B y C. La C se llama 'SI', aunque en algunas palabras suena como 'k'." }
+        ],
+        items:[
+          { id:"i-a", texto:"A", pron:"EI", es:"letra A (nombre)" },
+          { id:"i-b", texto:"B", pron:"BI", es:"letra B (nombre)" },
+          { id:"i-c", texto:"C", pron:"SI", es:"letra C (nombre)" },
+          { id:"i-d", texto:"D", pron:"DI", es:"letra D (nombre)" },
+          { id:"i-e", texto:"E", pron:"I", es:"letra E (nombre)" },
+          { id:"i-f", texto:"F", pron:"EF", es:"letra F (nombre)" },
+          { id:"i-g", texto:"G", pron:"YI", es:"letra G (nombre)" },
+          { id:"i-h", texto:"H", pron:"EICH", es:"letra H (nombre)" },
+          { id:"i-i", texto:"I", pron:"AI", es:"letra I (nombre)" },
+          { id:"i-j", texto:"J", pron:"YEI", es:"letra J (nombre)" }
+        ]},
+      { id:"in-1b", titulo:"Letras K a Z",
+        pasos:[
+          { tipo:"gancho", texto:"Ahora las 16 letras que faltan. Repite cada nombre en voz alta, en el mismo orden." },
+          { tipo:"pieza", grande:"K  L  M", pron:"KEI  EL  EM", texto:"Di el nombre, no el sonido. Después del nombre, escucha el botón de audio y repite." }
+        ],
+        items:[
+          { id:"i-k", texto:"K", pron:"KEI", es:"letra K (nombre)" },
+          { id:"i-l", texto:"L", pron:"EL", es:"letra L (nombre)" },
+          { id:"i-m", texto:"M", pron:"EM", es:"letra M (nombre)" },
+          { id:"i-n", texto:"N", pron:"EN", es:"letra N (nombre)" },
+          { id:"i-o", texto:"O", pron:"OU", es:"letra O (nombre)" },
+          { id:"i-p", texto:"P", pron:"PI", es:"letra P (nombre)" },
+          { id:"i-q", texto:"Q", pron:"KYU", es:"letra Q (nombre)" },
+          { id:"i-r", texto:"R", pron:"AR", es:"letra R (nombre)" },
+          { id:"i-s", texto:"S", pron:"ES", es:"letra S (nombre)" },
+          { id:"i-t", texto:"T", pron:"TI", es:"letra T (nombre)" },
+          { id:"i-u", texto:"U", pron:"YU", es:"letra U (nombre)" },
+          { id:"i-v", texto:"V", pron:"VI", es:"letra V (nombre)" },
+          { id:"i-w", texto:"W", pron:"DÁBLYU", es:"letra W (nombre)" },
+          { id:"i-x", texto:"X", pron:"EX", es:"letra X (nombre)" },
+          { id:"i-y", texto:"Y", pron:"WÁI", es:"letra Y (nombre)" },
+          { id:"i-z", texto:"Z", pron:"ZI", es:"letra Z (nombre)" }
+        ]}
     ]},
-    { id: "ing-2", titulo: "Sonidos difíciles", items: [], pasos: [
-      { tipo:"gancho", texto:"¿Por qué 'Father' no suena igual que 'Fáder' en español? Vamos a verlo con la boca." },
-      { tipo:"boca", grande:"th", say:"Father", titulo:"El sonido 'th'", pron:"suave, como una d con la lengua afuera", texto:"Pon la punta de la lengua entre los dientes, sin morderla. Vibra la garganta y sopla un poco." },
-      { tipo:"regla", titulo:"Regla 1: la MAYÚSCULA es la sílaba fuerte", grande:"FÁ-der", pron:"Father", say:"Father", texto:"En FÁ-der la fuerza va en FÁ. En inglés el acento marca cuál sílaba se dice más fuerte." },
-      { tipo:"pieza", grande:"Ice cream", pron:"ÁIS KRÍM", say:"Ice cream", texto:"Son dos piezas: 'ice' (hielo) más 'cream' (crema). Juntas significan helado. Las palabras compuestas se arman sumando piezas." },
-      { tipo:"reto", pregunta:"¿Cómo se dice 'helado' en inglés?", respuesta:"Ice cream (ÁIS KRÍM)" },
-      { tipo:"resumen", texto:"1) La 'th' lleva la lengua entre los dientes. 2) La sílaba fuerte va en MAYÚSCULA. 3) Palabra compuesta = suma de piezas." }
+    { titulo: "2. Saludos", sesiones: [
+      { id:"in-2a", titulo:"Saludos básicos",
+        pasos:[
+          { tipo:"gancho", texto:"Así empiezas cualquier conversación en inglés." },
+          { tipo:"pieza", grande:"Hello  /  Hi", pron:"JELÓ  /  JÁI", texto:"Hello es formal, para personas que no conoces. Hi es informal, para amigos." }
+        ],
+        items:[
+          { id:"i1", texto:"Hello", pron:"JELÓ", es:"Hola (formal, con personas que no conoces)", reg:"formal" },
+          { id:"i2", texto:"Hi", pron:"JÁI", es:"Hola (informal, con amigos)", reg:"informal" },
+          { id:"i-gm", texto:"Good morning", pron:"GUD MÓRNIN", es:"Buenos días", reg:"neutral" },
+          { id:"i-gn", texto:"Good night", pron:"GUD NÁIT", es:"Buenas noches (al despedirte)", reg:"neutral" },
+          { id:"i-bye", texto:"Bye", pron:"BÁI", es:"Adiós (informal)", reg:"informal" }
+        ]},
+      { id:"in-2b", titulo:"Cortesía",
+        pasos:[
+          { tipo:"gancho", texto:"Frases que vas a usar todos los días." },
+          { tipo:"pieza", grande:"Thank you", pron:"ZÁNK YU", texto:"'Please' es por favor, 'Sorry' es lo siento y 'Excuse me' es perdón para llamar la atención." }
+        ],
+        items:[
+          { id:"i-ty", texto:"Thank you", pron:"ZÁNK YU", es:"Gracias", reg:"neutral" },
+          { id:"i-pl", texto:"Please", pron:"PLIS", es:"Por favor", reg:"neutral" },
+          { id:"i-ye", texto:"Yes", pron:"YES", es:"Sí", reg:"neutral" },
+          { id:"i-no", texto:"No", pron:"NOU", es:"No", reg:"neutral" },
+          { id:"i-so", texto:"Sorry", pron:"SÓRI", es:"Lo siento / perdón", reg:"neutral" },
+          { id:"i-em", texto:"Excuse me", pron:"EKSKIÚS MI", es:"Perdón (para llamar la atención)", reg:"neutral" },
+          { id:"i-ha", texto:"How are you?", pron:"JAU AR YU", es:"¿Cómo estás?", reg:"neutral" }
+        ]}
+    ]},
+    { titulo: "3. Sonidos difíciles", sesiones: [
+      { id:"in-3a", titulo:"El sonido 'th'",
+        pasos:[
+          { tipo:"gancho", texto:"¿Por qué 'Father' no suena igual que 'Fáder' en español? Vamos a verlo con la boca." },
+          { tipo:"boca", grande:"th", pron:"lengua entre los dientes", texto:"Pon la punta de la lengua entre los dientes, sin morderla. Vibra la garganta y sopla un poco." }
+        ],
+        items:[
+          { id:"i3", texto:"Father", pron:"FÁ-der", es:"Padre", reg:"neutral", nota:"La 'th' va con la lengua entre los dientes." },
+          { id:"i-th", texto:"Think", pron:"ZINK", es:"Pensar", reg:"neutral", nota:"Ahora la 'th' suena sin vibrar la garganta." },
+          { id:"i-ths", texto:"This", pron:"DIS", es:"Este / esto", reg:"neutral" }
+        ]},
+      { id:"in-3b", titulo:"Palabras compuestas",
+        pasos:[
+          { tipo:"gancho", texto:"Muchas palabras en inglés son dos palabras pegadas." },
+          { tipo:"pieza", grande:"Sunflower", pron:"SÁN-flaur", texto:"Sun (sol) + flower (flor) = girasol. Para entender una palabra compuesta, suma sus piezas." }
+        ],
+        items:[
+          { id:"i4", texto:"Ice cream", pron:"ÁIS KRÍM", es:"Helado", reg:"neutral", partes:"ice (hielo) + cream (crema)" },
+          { id:"i-sf", texto:"Sunflower", pron:"SÁN-flaur", es:"Girasol", reg:"neutral", partes:"sun (sol) + flower (flor)" },
+          { id:"i-br", texto:"Bedroom", pron:"BÉD-rum", es:"Dormitorio", reg:"neutral", partes:"bed (cama) + room (cuarto)" }
+        ]}
+    ]},
+    { titulo: "4. Familia", sesiones: [
+      { id:"in-4a", titulo:"Familia",
+        pasos:[
+          { tipo:"gancho", texto:"Cinco palabras de familia." },
+          { tipo:"pieza", grande:"Mother", pron:"MÁ-der", texto:"La sílaba fuerte va en MAYÚSCULA: MÁ-der. Repite cada palabra después de escucharla." }
+        ],
+        items:[
+          { id:"i-mo", texto:"Mother", pron:"MÁ-der", es:"Madre", reg:"neutral" },
+          { id:"i-bro", texto:"Brother", pron:"BRÁ-der", es:"Hermano", reg:"neutral" },
+          { id:"i-si", texto:"Sister", pron:"SÍS-ter", es:"Hermana", reg:"neutral" },
+          { id:"i-so2", texto:"Son", pron:"SAN", es:"Hijo", reg:"neutral" },
+          { id:"i-da", texto:"Daughter", pron:"DÓ-ter", es:"Hija", reg:"neutral" }
+        ]}
     ]}
   ]},
-  coreano: { nombre: "Coreano", lecciones: [
-    { id: "cor-1", titulo: "Saludos", items: [
-      { id:"c1", texto:"안녕하세요", pron:"ANYÓNG-HA-SÉ-YO", es:"Hola (formal)", reg:"formal", img:"img/hola-formal.jpg", partes:null },
-      { id:"c2", texto:"안녕", pron:"ANYÓNG", es:"Hola (informal, con amigos)", reg:"informal", img:"img/hola-informal.jpg", partes:null },
-      { id:"c3", texto:"감사합니다", pron:"KAMSA-HAMNIDA", es:"Gracias (formal)", reg:"formal", img:"img/gracias.jpg", partes:null }
+  coreano: { nombre: "Coreano", unidades: [
+    { titulo: "1. Abecedario", sesiones: [
+      { id:"ko-1a", titulo:"Consonantes básicas",
+        pasos:[
+          { tipo:"gancho", texto:"El coreano se escribe en bloques. Primero, las consonantes." },
+          { tipo:"pieza", grande:"ㄱ  ㄴ  ㄷ", pron:"g  n  d (suaves)", texto:"Al inicio de una sílaba, ㄱ suena como 'g' suave y ㄷ como 'd' suave." }
+        ],
+        items:[
+          { id:"c-g", texto:"ㄱ", pron:"g suave", es:"consonante g suave" },
+          { id:"c-n", texto:"ㄴ", pron:"n", es:"consonante n" },
+          { id:"c-d", texto:"ㄷ", pron:"d suave", es:"consonante d suave" },
+          { id:"c-r", texto:"ㄹ", pron:"r suave", es:"consonante entre r y l" },
+          { id:"c-m", texto:"ㅁ", pron:"m", es:"consonante m" },
+          { id:"c-b", texto:"ㅂ", pron:"b suave", es:"consonante b suave" },
+          { id:"c-s", texto:"ㅅ", pron:"s", es:"consonante s" },
+          { id:"c-ng", texto:"ㅇ", pron:"sin sonido al inicio", es:"consonante muda al inicio (suena 'ng' al final)" },
+          { id:"c-j", texto:"ㅈ", pron:"y suave", es:"consonante y / j suave" },
+          { id:"c-h", texto:"ㅎ", pron:"j suave", es:"consonante j suave (como 'h' de 'hola' suave)" }
+        ]},
+      { id:"ko-1b", titulo:"Consonantes fuertes",
+        pasos:[
+          { tipo:"gancho", texto:"Estas suenan más fuertes, con un soplo de aire." },
+          { tipo:"boca", grande:"ㅋ  ㅌ  ㅍ  ㅊ", pron:"k  t  p  ch fuertes", texto:"Pon la mano frente a la boca. Al decir ㅋ, ㅌ, ㅍ o ㅊ sale más aire que con las suaves." }
+        ],
+        items:[
+          { id:"c-k", texto:"ㅋ", pron:"k fuerte", es:"consonante k fuerte (con soplo)" },
+          { id:"c-t", texto:"ㅌ", pron:"t fuerte", es:"consonante t fuerte (con soplo)" },
+          { id:"c-p", texto:"ㅍ", pron:"p fuerte", es:"consonante p fuerte (con soplo)" },
+          { id:"c-ch", texto:"ㅊ", pron:"ch fuerte", es:"consonante ch fuerte (con soplo)" }
+        ]},
+      { id:"ko-1c", titulo:"Vocales",
+        pasos:[
+          { tipo:"gancho", texto:"Ahora las vocales. Hay dos formas: verticales y horizontales." },
+          { tipo:"regla", titulo:"Regla 1: vertical a la derecha", grande:"ㅏ", pron:"a", texto:"Las vocales verticales (ㅏ ㅓ ㅣ ㅑ ㅕ) van a la derecha de la consonante. Las horizontales (ㅗ ㅜ ㅡ ㅛ ㅠ) van abajo." }
+        ],
+        items:[
+          { id:"v-a", texto:"ㅏ", pron:"a", es:"vocal a (como 'casa')" },
+          { id:"v-eo", texto:"ㅓ", pron:"ó suave", es:"vocal ó suave (boca medio abierta)" },
+          { id:"v-o", texto:"ㅗ", pron:"o", es:"vocal o" },
+          { id:"v-u", texto:"ㅜ", pron:"u", es:"vocal u" },
+          { id:"v-eu", texto:"ㅡ", pron:"eu", es:"vocal eu (labios estirados)" },
+          { id:"v-i", texto:"ㅣ", pron:"i", es:"vocal i" },
+          { id:"v-ya", texto:"ㅑ", pron:"ya", es:"vocal ya" },
+          { id:"v-yeo", texto:"ㅕ", pron:"yó", es:"vocal yó" },
+          { id:"v-yo", texto:"ㅛ", pron:"yo", es:"vocal yo" },
+          { id:"v-yu", texto:"ㅠ", pron:"yu", es:"vocal yu" }
+        ]}
     ]},
-    { id: "cor-2", titulo: "Tu primera sílaba", items: [], pasos: [
-      { tipo:"gancho", texto:"El coreano se escribe en bloques. Cada bloque es una sílaba. Vamos a armar la primera." },
-      { tipo:"pieza", grande:"ㄱ", pron:"g suave", texto:"Esta es la consonante ㄱ. Al inicio suena como una 'g' suave." },
-      { tipo:"pieza", grande:"ㅏ", pron:"a", texto:"Esta es la vocal ㅏ. Suena como la 'a' de 'casa'." },
-      { tipo:"regla", titulo:"Regla 1: vocal vertical → a la derecha", grande:"가", pron:"ga", say:"가", texto:"La vocal vertical siempre va a la derecha de la consonante. Por eso ㄱ + ㅏ = 가." },
-      { tipo:"boca", grande:"ㅏ", titulo:"La boca para la 'a'", pron:"boca bien abierta", texto:"Abre la boca grande y deja la lengua baja. Si cierras la boca, el sonido cambia." },
-      { tipo:"reto", pregunta:"¿Puedes leer esta palabra?", grande:"바나나", respuesta:"ba-na-na (banana)", say:"바나나" },
-      { tipo:"resumen", texto:"Consonante + vocal = sílaba. Vocal vertical va a la derecha. La vocal horizontal va abajo: eso lo vemos en la siguiente clase." }
+    { titulo: "2. Primeras sílabas", sesiones: [
+      { id:"ko-2a", titulo:"Sílabas con a",
+        pasos:[
+          { tipo:"gancho", texto:"Consonante + vocal = sílaba." },
+          { tipo:"regla", titulo:"Ejemplo", grande:"가", pron:"ga", texto:"ㄱ + ㅏ = 가 (ga). Ahora haz lo mismo con las demás consonantes." }
+        ],
+        items:[
+          { id:"s-ga", texto:"가", pron:"ga", es:"sílaba ga" },
+          { id:"s-na", texto:"나", pron:"na", es:"sílaba na" },
+          { id:"s-da", texto:"다", pron:"da", es:"sílaba da" },
+          { id:"s-ra", texto:"라", pron:"ra", es:"sílaba ra" },
+          { id:"s-ma", texto:"마", pron:"ma", es:"sílaba ma" },
+          { id:"s-ba", texto:"바", pron:"ba", es:"sílaba ba" },
+          { id:"s-sa", texto:"사", pron:"sa", es:"sílaba sa" },
+          { id:"s-ha", texto:"하", pron:"ja", es:"sílaba ja" },
+          { id:"s-ja", texto:"자", pron:"ya", es:"sílaba ya (suave)" },
+          { id:"s-a", texto:"아", pron:"a", es:"sílaba a (sin consonante al inicio)" }
+        ]},
+      { id:"ko-2b", titulo:"Palabras de dos bloques",
+        pasos:[
+          { tipo:"gancho", texto:"Ahora juntamos dos o tres bloques." },
+          { tipo:"pieza", grande:"하나", pron:"HA-NA", texto:"하 (ha) + 나 (na) = 하나 (Hana), que significa 'uno'. Lee de izquierda a derecha." }
+        ],
+        items:[
+          { id:"w-hana", texto:"하나", pron:"HA-NA", es:"uno", reg:"neutral" },
+          { id:"w-nara", texto:"나라", pron:"NA-RA", es:"país", reg:"neutral" },
+          { id:"w-gasu", texto:"가수", pron:"KA-SU", es:"cantante", reg:"neutral" },
+          { id:"w-sagwa", texto:"사과", pron:"SA-GWA", es:"manzana", reg:"neutral" },
+          { id:"w-banana", texto:"바나나", pron:"BA-NA-NA", es:"banana", reg:"neutral" }
+        ]}
+    ]},
+    { titulo: "3. Saludos", sesiones: [
+      { id:"ko-3a", titulo:"Saludos",
+        pasos:[
+          { tipo:"gancho", texto:"Ya sabes leer bloques. Ahora, frases para saludar." },
+          { tipo:"pieza", grande:"안녕하세요", pron:"ANYÓNG-HA-SÉ-YO", texto:"Es formal, para personas que no conoces o mayores. 안녕 es informal, para amigos." }
+        ],
+        items:[
+          { id:"c1", texto:"안녕하세요", pron:"ANYÓNG-HA-SÉ-YO", es:"Hola (formal)", reg:"formal" },
+          { id:"c2", texto:"안녕", pron:"ANYÓNG", es:"Hola (informal, con amigos)", reg:"informal" },
+          { id:"c3", texto:"감사합니다", pron:"KAMSA-HAMNIDA", es:"Gracias (formal)", reg:"formal" },
+          { id:"c-ne", texto:"네", pron:"NE", es:"Sí", reg:"neutral" },
+          { id:"c-ani", texto:"아니요", pron:"A-NI-YO", es:"No", reg:"formal" },
+          { id:"c-mi", texto:"미안합니다", pron:"MI-AN-HAM-NI-DA", es:"Lo siento (formal)", reg:"formal" },
+          { id:"c-gas", texto:"안녕히 가세요", pron:"AN-NYÓNG-HI GA-SÉ-YO", es:"Adiós (a alguien que se va)", reg:"formal" }
+        ]}
     ]}
   ]}
 };
 
-// ---------- Estado guardado en el dispositivo ----------
-const KEY = "tutor-estado-v1";
-let estado = JSON.parse(localStorage.getItem(KEY) || '{"tarjetas":{},"racha":0,"ultimo":null}');
-function guardar(){ localStorage.setItem(KEY, JSON.stringify(estado)); }
+// ---------- Estado guardado en el dispositivo (por idioma) ----------
+const KEY = "tutor-estado-v2";
+let estado = {};
+try { estado = JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { estado = {}; }
+estado.tarjetas ||= {};   // id -> { paso, prox }
+estado.sesiones ||= {};   // id de sesión -> true si aprobada
+estado.puntajes ||= {};   // id de sesión -> porcentaje
+if (!IDIOMAS[estado.idioma]) estado.idioma = "ingles";
+function guardar(){ try { localStorage.setItem(KEY, JSON.stringify(estado)); } catch (e) {} }
 
-// Repetición espaciada sencilla: acertar alarga el intervalo; fallar lo reinicia.
-const hoyTS = () => Date.now();
-const DIA = 86400000;
+// ---------- Repetición espaciada ----------
+// Primera vez: recordar a las pocas horas. Después: 1, 3, 7, 14 y 30 días.
+// Acertar avanza un paso; fallar vuelve al inicio.
+const H = 3600000, DIA = 24 * H;
+const PASOS = [4 * H, DIA, 3 * DIA, 7 * DIA, 14 * DIA, 30 * DIA];
+const ahora = () => Date.now();
+function primeraVez(id){
+  if (!estado.tarjetas[id]) { estado.tarjetas[id] = { paso: 0, prox: ahora() + PASOS[0] }; guardar(); }
+}
 function programar(id, acierto){
   const t = estado.tarjetas[id] || { paso: 0, prox: 0 };
-  const pasos = [1, 3, 7, 14, 30]; // días
-  t.paso = acierto ? Math.min(t.paso + 1, pasos.length - 1) : 0;
-  t.prox = hoyTS() + pasos[t.paso] * DIA;
+  t.paso = acierto ? Math.min(t.paso + 1, PASOS.length - 1) : 0;
+  t.prox = ahora() + PASOS[t.paso];
   estado.tarjetas[id] = t;
   guardar();
 }
-function pendientes(){
-  const lista = [];
-  for (const k in CURSOS) for (const l of CURSOS[k].lecciones) for (const it of l.items) {
+
+// ---------- Ayudas de ruta ----------
+const esc = t => String(t).replace(/\\/g, "\\\\").replace(/'/g, "\\'");
+const shuffle = a => { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+function todasSesiones(k){ return IDIOMAS[k].unidades.flatMap(u => u.sesiones.map(s => ({ ...s, unidad: u.titulo }))); }
+function buscarSesion(sid){ return todasSesiones(estado.idioma).find(s => s.id === sid); }
+function estaHecha(sid){ return !!estado.sesiones[sid]; }
+function desbloqueada(k, i){ const l = todasSesiones(k); return i === 0 || estaHecha(l[i - 1].id); }
+function repasosDebidos(k){
+  const out = [];
+  for (const s of todasSesiones(k)) for (const it of s.items) {
     const t = estado.tarjetas[it.id];
-    if (!t || t.prox <= hoyTS()) lista.push({ ...it, curso:k, leccion:l.id });
+    if (t && t.prox <= ahora()) out.push(it);
   }
-  return lista;
+  return out;
+}
+function textoPlazo(t){
+  if (!t) return "Sin ver";
+  const d = t.prox - ahora();
+  if (d <= 0) return "Para repasar";
+  return d < DIA ? `Próxima en ${Math.ceil(d / H)} h` : `Próxima en ${Math.ceil(d / DIA)} días`;
 }
 
 // ---------- Pantallas ----------
 const app = document.getElementById("app");
+const selIdioma = document.getElementById("idioma");
+selIdioma.innerHTML = Object.entries(IDIOMAS).map(([k, v]) => `<option value="${k}">${v.nombre}</option>`).join("");
+selIdioma.value = estado.idioma;
+selIdioma.onchange = () => { estado.idioma = selIdioma.value; guardar(); ir("hoy"); };
 let vista = "hoy";
+let sesionAct = null;
 
 function render(){
   document.querySelectorAll("nav button").forEach(b => b.classList.toggle("on", b.dataset.view === vista));
-  const r = estado.racha || 0;
-  document.getElementById("streak").textContent = r ? `🔥 ${r} días` : "";
-  ({ hoy, estudiar, clases, mapa }[vista])();
+  ({ hoy, estudiar, ruta, mapa }[vista])();
 }
+function ir(v){ sesionAct = null; vista = v; render(); window.scrollTo(0, 0); }
+document.querySelectorAll("nav button").forEach(b => b.onclick = () => ir(b.dataset.view));
 
 function hoy(){
-  const pend = pendientes();
-  const total = Object.keys(estado.tarjetas).length;
+  const k = estado.idioma, lista = todasSesiones(k);
+  const debidos = repasosDebidos(k).length;
+  const hechas = lista.filter(s => estaHecha(s.id)).length;
+  const i = lista.findIndex((s, n) => desbloqueada(k, n) && !estaHecha(s.id));
+  const sig = i >= 0 ? lista[i] : null;
   app.innerHTML = `
     <div class="card">
-      <div class="big">${pend.length ? "Hoy toca estudiar" : "¡Estás al día!"}</div>
-      <p class="muted">${pend.length ? `${pend.length} palabras para repasar o aprender.` : "Vuelve mañana: lo que aprendiste regresará a su tiempo."}</p>
-      <div class="row"><button class="btn" onclick="ir('estudiar')">Empezar</button></div>
+      <div class="muted">${IDIOMAS[k].nombre} · tu ruta</div>
+      <div class="big" style="margin-top:6px">${sig ? sig.titulo : "¡Ruta completa!"}</div>
+      <p class="muted">${sig ? sig.unidad : "Vuelve a repasar para mantener la memoria."}</p>
+      <div class="row">
+        ${sig ? `<button class="btn" onclick="empezarSesion('${sig.id}')">Empezar sesión</button>` : ""}
+        ${debidos ? `<button class="btn sec" onclick="ir('estudiar')">Repasar (${debidos})</button>` : ""}
+      </div>
     </div>
     <div class="card">
-      <div class="muted">Tu avance</div>
-      <div class="bar"><div style="width:${Math.min(100, total * 10)}%"></div></div>
-      <p class="muted">${total} palabras en tu mapa de conocimiento.</p>
+      <div class="muted">Avance en ${IDIOMAS[k].nombre}</div>
+      <div class="bar"><div style="width:${Math.round(hechas / lista.length * 100)}%"></div></div>
+      <p class="muted">${hechas} de ${lista.length} sesiones aprobadas (60 % para avanzar).</p>
     </div>`;
 }
 
 function estudiar(){
-  const pend = pendientes();
-  if (!pend.length){ app.innerHTML = `<div class="card"><p>No tienes nada pendiente. ¡Buen trabajo!</p></div>`; return; }
-  mostrarTarjeta(pend[0]);
+  const debidos = repasosDebidos(estado.idioma);
+  if (!debidos.length){
+    app.innerHTML = `<div class="card"><p>No tienes repasos pendientes ahora. Vuelve cuando lleguen.</p></div>`;
+    return;
+  }
+  mostrarTarjeta(debidos[0], debidos.length);
 }
-
-function mostrarTarjeta(it){
-  const reg = `<span class="tag ${it.reg}">${it.reg}</span>`;
-  const partes = it.partes ? `
-    <div class="parts">${it.partes.map(p => `
-      <div class="part"><b>${p.t}</b><div class="pron">${p.pron}</div><div class="muted">${p.es}</div></div>`).join("")}
-    </div>
-    <p class="muted">${it.otro || ""}</p>` : "";
+function mostrarTarjeta(it, total){
   app.innerHTML = `
     <div class="card">
-      <img class="img" src="${it.img}" alt="" onerror="this.style.display='none'">
-      <div class="big">${it.texto}</div>
+      <div class="muted">Repaso · quedan ${total}</div>
+      <div class="big" style="margin-top:10px">${it.texto}</div>
       <div class="pron">${it.pron}</div>
-      <div>${reg}</div>
       <p><b>Significado:</b> ${it.es}</p>
-      ${it.nota ? `<p class="muted">💡 ${it.nota}</p>` : ""}
-      ${partes}
-      <div class="row">
-        <button class="btn" onclick="hablar('${it.texto.replace(/'/g,"\\'")}')">🔊 Escuchar</button>
-      </div>
+      <div class="row"><button class="btn sec" onclick="hablar('${esc(it.texto)}')">🔊 Escuchar</button></div>
     </div>
     <div class="card">
-      <div class="muted">¿La recordaste?</div>
+      <div class="muted">¿La recordaste sin mirar?</div>
       <div class="row">
-        <button class="btn sec" onclick="responder('${it.id}', false)">No la sabía</button>
+        <button class="btn sec" onclick="responder('${it.id}', false)">No</button>
         <button class="btn" onclick="responder('${it.id}', true)">Sí</button>
       </div>
     </div>`;
 }
-
 function responder(id, ok){ programar(id, ok); estudiar(); }
 
-// ---------- Clases paso a paso (método: pregunta, piezas, regla, boca, reto, resumen) ----------
-let claseAct = null, pasoAct = 0, relojReto = null;
-const TIPO_TXT = { gancho:"Pregunta", pieza:"Pieza", regla:"Regla", boca:"Boca", reto:"Tu turno", resumen:"Resumen" };
-
-function clases(){
-  app.innerHTML = Object.entries(CURSOS).map(([k, c]) => `
-    <div class="card"><div class="big">${c.nombre}</div>
-      ${c.lecciones.map(l => l.pasos
-        ? `<p>📘 ${l.titulo} · ${l.pasos.length} pasos <button class="btn" onclick="abrirClase('${k}','${l.id}')">Empezar</button></p>`
-        : `<p>📘 ${l.titulo} · ${l.items.length} palabras</p>`).join("")}
-    </div>`).join("");
-}
-
-function abrirClase(k, lid){ claseAct = { k, lid }; pasoAct = 0; mostrarPaso(); }
-function paso(d){ pasoAct += d; mostrarPaso(); window.scrollTo(0, 0); }
-
-function mostrarPaso(){
-  clearInterval(relojReto);
-  const lec = CURSOS[claseAct.k].lecciones.find(l => l.id === claseAct.lid);
-  const p = lec.pasos[pasoAct], n = lec.pasos.length;
-  const reto = p.tipo === "reto" ? `
-    <div class="reto">
-      <div class="muted" id="cuenta">Piénsalo… 3</div>
-      <div class="pron" id="resp" style="display:none">${p.respuesta}</div>
-    </div>` : "";
-  app.innerHTML = `
-    <div class="card">
-      <div class="muted">${lec.titulo} · paso ${pasoAct + 1} de ${n}</div>
-      <div class="bar"><div style="width:${(pasoAct + 1) / n * 100}%"></div></div>
-      <div style="margin-top:14px"><span class="tag">${TIPO_TXT[p.tipo]}</span></div>
-      ${p.titulo ? `<div class="sub">${p.titulo}</div>` : ""}
-      ${p.grande ? `<div class="letra">${p.grande}</div>` : ""}
-      ${p.pron ? `<div class="pron">${p.pron}</div>` : ""}
-      ${p.tipo === "reto" ? `<div class="big" style="font-size:22px">${p.pregunta}</div>` : ""}
-      <p>${p.texto || ""}</p>
-      ${reto}
-      ${p.say ? `<div class="row"><button class="btn sec" onclick="hablar('${p.say}')">🔊 Escuchar</button></div>` : ""}
-      <div class="row">
-        ${pasoAct > 0 ? `<button class="btn sec" onclick="paso(-1)">Atrás</button>` : ""}
-        ${pasoAct < n - 1
-          ? `<button class="btn" onclick="paso(1)">Siguiente</button>`
-          : `<button class="btn" onclick="ir('clases')">Terminar lección</button>`}
-      </div>
-    </div>`;
-  if (p.tipo === "reto") {
-    let t = 3;
-    relojReto = setInterval(() => {
-      t--;
-      const c = document.getElementById("cuenta"), r = document.getElementById("resp");
-      if (!c || !r) { clearInterval(relojReto); return; }
-      if (t > 0) { c.textContent = "Piénsalo… " + t; return; }
-      clearInterval(relojReto);
-      c.style.display = "none";
-      r.style.display = "block";
-    }, 1000);
-  }
+function ruta(){
+  if (sesionAct) return sesionRender();
+  const k = estado.idioma;
+  let n = 0;
+  app.innerHTML = `<div class="card"><div class="big">Ruta · ${IDIOMAS[k].nombre}</div>
+    <p class="muted">Cada sesión se desbloquea al acertar el 60 % de la anterior.</p></div>` +
+    IDIOMAS[k].unidades.map(u => `<div class="card"><div class="sub">${u.titulo}</div>` +
+      u.sesiones.map(s => {
+        const i = n++;
+        const hecha = estaHecha(s.id), abierta = desbloqueada(k, i);
+        const txt = hecha ? `✅ ${estado.puntajes[s.id]} %` : (abierta ? "▶ Disponible" : "🔒 Bloqueada");
+        return `<div class="ses ${abierta ? "" : "bloq"}">
+          <div><b>${s.titulo}</b><div class="muted">${s.items.length} palabras · ${txt}</div></div>
+          ${abierta ? `<button class="btn ${hecha ? "sec" : ""}" onclick="empezarSesion('${s.id}')">${hecha ? "Repasar" : "Empezar"}</button>` : ""}
+        </div>`;
+      }).join("") + `</div>`).join("");
 }
 
 function mapa(){
   const filas = [];
-  for (const k in CURSOS) for (const l of CURSOS[k].lecciones) for (const it of l.items) {
-    const t = estado.tarjetas[it.id];
-    const estadoTxt = !t ? "Nueva" : (t.prox <= hoyTS() ? "Para repasar" : `Próxima en ${Math.ceil((t.prox - hoyTS()) / DIA)} días`);
-    filas.push(`<tr><td>${it.texto}</td><td>${it.es}</td><td class="muted">${estadoTxt}</td></tr>`);
-  }
-  app.innerHTML = `<div class="card"><div class="big">Mapa de conocimiento</div>
+  for (const s of todasSesiones(estado.idioma)) for (const it of s.items)
+    filas.push(`<tr><td>${it.texto}</td><td>${it.es}</td><td class="muted">${textoPlazo(estado.tarjetas[it.id])}</td></tr>`);
+  app.innerHTML = `<div class="card"><div class="big">Mapa · ${IDIOMAS[estado.idioma].nombre}</div>
     <table style="width:100%;border-collapse:collapse;margin-top:10px">${filas.join("")}</table></div>`;
 }
 
-// Audio por palabra: si existe el MP3 (audio/en/<slug>.mp3 o audio/ko/<slug>.mp3) se usa;
-// si no, se usa la voz del navegador como respaldo.
-function slug(t){ return t.toLowerCase().replace(/[^a-z0-9\uac00-\ud7af]+/g,"-").replace(/^-|-$/g,""); }
+// ---------- Sesión: explicar → tarjetas → juegos → resultado ----------
+function empezarSesion(sid){
+  const s = buscarSesion(sid);
+  if (!s) return;
+  sesionAct = { s, fase: "explicar", i: 0, n: 0, total: 0, aciertos: 0, preg: null, fallos: new Set() };
+  vista = "ruta";
+  render();
+}
+function salirSesion(){ ir("ruta"); }
+function sesionRender(){
+  const f = sesionAct.fase;
+  if (f === "explicar") fasePasos();
+  else if (f === "tarjetas") faseTarjetas();
+  else if (f === "juego") faseJuego();
+  else faseResultado();
+}
+function faseCambiar(f){ sesionAct.fase = f; sesionAct.i = 0; sesionRender(); window.scrollTo(0, 0); }
+
+const TIPO_TXT = { gancho: "Pregunta", pieza: "Pieza", regla: "Regla", boca: "Boca" };
+function fasePasos(){
+  const S = sesionAct, pasos = S.s.pasos, p = pasos[S.i];
+  app.innerHTML = `<div class="card">
+    <div class="muted">${S.s.titulo} · explicación ${S.i + 1} de ${pasos.length}</div>
+    <div class="bar"><div style="width:${(S.i + 1) / pasos.length * 100}%"></div></div>
+    <div style="margin-top:12px"><span class="tag">${TIPO_TXT[p.tipo] || "Pieza"}</span></div>
+    ${p.titulo ? `<div class="sub">${p.titulo}</div>` : ""}
+    ${p.grande ? `<div class="letra">${p.grande}</div>` : ""}
+    ${p.pron ? `<div class="pron">${p.pron}</div>` : ""}
+    <p>${p.texto}</p>
+    <div class="row">
+      ${S.i > 0 ? `<button class="btn sec" onclick="sesionPaso(-1)">Atrás</button>` : ""}
+      ${S.i < pasos.length - 1
+        ? `<button class="btn" onclick="sesionPaso(1)">Siguiente</button>`
+        : `<button class="btn" onclick="faseCambiar('tarjetas')">Ver palabras</button>`}
+    </div></div>`;
+}
+function sesionPaso(d){ sesionAct.i += d; sesionRender(); window.scrollTo(0, 0); }
+
+function faseTarjetas(){
+  const S = sesionAct, items = S.s.items, it = items[S.i], ultima = S.i === items.length - 1;
+  app.innerHTML = `<div class="card">
+    <div class="muted">${S.s.titulo} · palabra ${S.i + 1} de ${items.length}</div>
+    <div class="bar"><div style="width:${(S.i + 1) / items.length * 100}%"></div></div>
+    <div class="big" style="margin-top:12px">${it.texto}</div>
+    <div class="pron">${it.pron}</div>
+    ${it.reg ? `<div><span class="tag ${it.reg}">${it.reg}</span></div>` : ""}
+    <p><b>Significado:</b> ${it.es}</p>
+    ${it.partes ? `<p class="muted">Piezas: ${it.partes}</p>` : ""}
+    ${it.nota ? `<p class="muted">💡 ${it.nota}</p>` : ""}
+    <div class="row">
+      <button class="btn sec" onclick="hablar('${esc(it.texto)}')">🔊 Escuchar</button>
+      <button class="btn" onclick="tarjetaSig()">${ultima ? "Jugar" : "Siguiente"}</button>
+    </div></div>`;
+}
+function tarjetaSig(){
+  const S = sesionAct;
+  if (S.i < S.s.items.length - 1) { S.i++; sesionRender(); window.scrollTo(0, 0); }
+  else faseCambiar("juego");
+}
+
+// Juegos: 1) ver la palabra y elegir el significado; 2) escuchar y elegir la palabra (desde la 2.ª sesión).
+// Dificultad: 2 opciones en las primeras sesiones, 3 después, 4 al final.
+function opciones(it, items, n, campo){
+  const otros = shuffle(items.filter(x => x.id !== it.id)).slice(0, n - 1).map(x => x[campo]);
+  return shuffle([it[campo], ...otros]);
+}
+function construirJuego(){
+  const S = sesionAct, items = S.s.items;
+  const idx = todasSesiones(estado.idioma).findIndex(x => x.id === S.s.id);
+  const nOpc = idx < 2 ? 2 : idx < 4 ? 3 : 4;
+  const preg = [];
+  for (const it of shuffle([...items])) preg.push({ modo: "ver", it, opc: opciones(it, items, nOpc, "es") });
+  if (idx >= 1) for (const it of shuffle([...items])) preg.push({ modo: "oir", it, opc: opciones(it, items, nOpc, "texto") });
+  S.preg = preg;
+  items.forEach(it => primeraVez(it.id));
+}
+function faseJuego(){
+  const S = sesionAct;
+  if (!S.preg) construirJuego();
+  if (S.n >= S.preg.length) return finalizar();
+  const q = S.preg[S.n];
+  const cabeza = q.modo === "ver"
+    ? `<div class="muted">¿Qué significa?</div><div class="big" style="margin-top:6px">${q.it.texto}</div><div class="pron">${q.it.pron}</div>`
+    : `<div class="muted">Escucha y elige la palabra</div><div class="row"><button class="btn sec" onclick="hablar('${esc(q.it.texto)}')">🔊 Escuchar otra vez</button></div>`;
+  app.innerHTML = `<div class="card">
+    <div class="muted">${S.s.titulo} · juego ${S.n + 1} de ${S.preg.length}</div>
+    <div class="bar"><div style="width:${S.n / S.preg.length * 100}%"></div></div>
+    <div style="margin-top:14px">${cabeza}</div>
+    <div id="opc">${q.opc.map((o, j) => `<button class="opt" onclick="responderJuego(${j})">${o}</button>`).join("")}</div>
+    <div id="fb"></div></div>`;
+  if (q.modo === "oir") hablar(q.it.texto);
+}
+function responderJuego(j){
+  const S = sesionAct, q = S.preg[S.n];
+  const correcta = q.modo === "ver" ? q.it.es : q.it.texto;
+  const ok = q.opc[j] === correcta;
+  S.total++;
+  if (ok) S.aciertos++; else S.fallos.add(q.it.id);
+  document.querySelectorAll("#opc .opt").forEach((b, k) => {
+    b.disabled = true;
+    if (q.opc[k] === correcta) b.classList.add("ok");
+    else if (k === j) b.classList.add("mal");
+  });
+  document.getElementById("fb").innerHTML = `
+    <p class="muted">${ok ? "✔ Correcto" : "✖ La respuesta era: " + correcta}</p>
+    <div class="row"><button class="btn" onclick="siguienteJuego()">Siguiente</button></div>`;
+}
+function siguienteJuego(){ sesionAct.n++; sesionRender(); window.scrollTo(0, 0); }
+
+function finalizar(){
+  const S = sesionAct;
+  S.s.items.forEach(it => programar(it.id, !S.fallos.has(it.id)));
+  S.fase = "resultado";
+  sesionRender();
+}
+function faseResultado(){
+  const S = sesionAct, pct = S.total ? Math.round(S.aciertos / S.total * 100) : 0;
+  const pasa = pct >= 60;
+  if (pasa) estado.sesiones[S.s.id] = true;
+  estado.puntajes[S.s.id] = pct;
+  guardar();
+  const lista = todasSesiones(estado.idioma);
+  const sig = lista[lista.findIndex(x => x.id === S.s.id) + 1];
+  app.innerHTML = `<div class="card">
+    <div class="muted">${S.s.titulo}</div>
+    <div class="big" style="margin-top:6px">${pasa ? "¡Lo lograste!" : "Casi, repítela"}</div>
+    <p>Acertaste ${S.aciertos} de ${S.total} (${pct} %). Para avanzar necesitas 60 %.</p>
+    <p class="muted">${pasa
+      ? "Las palabras que fallaste volverán pronto. Las demás volverán después."
+      : "Las palabras que fallaste volverán en pocas horas."}</p>
+    <div class="row">
+      ${pasa && sig ? `<button class="btn" onclick="empezarSesion('${sig.id}')">Siguiente sesión</button>` : ""}
+      ${!pasa ? `<button class="btn" onclick="empezarSesion('${S.s.id}')">Repetir</button>` : ""}
+      <button class="btn sec" onclick="salirSesion()">Volver a la ruta</button>
+    </div></div>`;
+}
+
+// ---------- Audio por palabra: MP3 si existe (audio/en o audio/ko), si no voz del navegador ----------
+function slug(t){ return t.toLowerCase().replace(/[^a-z0-9가-힯]+/g, "-").replace(/^-|-$/g, ""); }
 function hablar(texto){
-  const esKo = /[\uac00-\ud7af]/.test(texto);
+  const esKo = /[가-힯㄰-㆏]/.test(texto);
   const ruta = (esKo ? "audio/ko/" : "audio/en/") + slug(texto) + ".mp3";
   const a = new Audio(ruta);
   a.onerror = () => voz(texto, esKo);
@@ -267,9 +562,6 @@ function voz(texto, esKo){
   speechSynthesis.cancel();
   speechSynthesis.speak(u);
 }
-
-function ir(v){ clearInterval(relojReto); vista = v; render(); }
-document.querySelectorAll("nav button").forEach(b => b.onclick = () => ir(b.dataset.view));
 
 // Registro de la PWA (instalable en Chrome y Android)
 if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js");
