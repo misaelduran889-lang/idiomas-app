@@ -144,15 +144,15 @@ const IDIOMAS = {
       { id:"in-2b", titulo:"Cortesía",
         pasos:[
           { tipo:"gancho", texto:"Frases que vas a usar todos los días." },
-          { tipo:"pieza", grande:"Thank you", pron:"Zenkiu", texto:"'Please' es por favor, 'Sorry' es lo siento y 'Excuse me' es perdón para llamar la atención." }
+          { tipo:"pieza", grande:"Thank you", pron:"Zenkiu", texto:"'Please' es por favor, 'Sorry' es perdón o lo siento, y 'Excuse me' es excúsame, para llamar la atención." }
         ],
         items:[
           { id:"i-ty", texto:"Thank you", pron:"Zenkiu", es:"Gracias", reg:"neutral" },
           { id:"i-pl", texto:"Please", pron:"Plíz", es:"Por favor", reg:"neutral" },
           { id:"i-ye", texto:"Yes", pron:"YES", es:"Sí", reg:"neutral" },
           { id:"i-no", texto:"No", pron:"nou", es:"No", reg:"neutral" },
-          { id:"i-so", texto:"Sorry", pron:"sórri", es:"Lo siento / perdón", reg:"neutral" },
-          { id:"i-em", texto:"Excuse me", pron:"exkius mi", es:"Perdón (para llamar la atención)", reg:"neutral" },
+          { id:"i-so", texto:"Sorry", pron:"sórri", es:"Perdón / lo siento", reg:"neutral" },
+          { id:"i-em", texto:"Excuse me", pron:"exkius mi", es:"Excúsame (para llamar la atención)", reg:"neutral" },
           { id:"i-ha", texto:"How are you?", pron:"ja-ÁR-iu", es:"¿Cómo estás?", reg:"neutral" }
         ]}
     ]},
@@ -286,7 +286,7 @@ const IDIOMAS = {
           { tipo:"pieza", grande:"Do", pron:"du", texto:"Repite cada palabra después de escucharla." }
         ],
         items:[
-          { id:"n-hacer", texto:"Do", pron:"du", es:"Hacer", reg:"neutral" },
+          { id:"n-hacer", texto:"Do", pron:"du", es:"Hacer (una acción)", reg:"neutral" },
           { id:"n-dormir", texto:"Sleep", pron:"slip", es:"Dormir", reg:"neutral" },
           { id:"n-escribir", texto:"Write", pron:"rát", es:"Escribir", reg:"neutral" },
           { id:"n-ir", texto:"Go", pron:"gó", es:"Ir", reg:"neutral" },
@@ -324,7 +324,7 @@ const IDIOMAS = {
         ],
         items:[
           { id:"av-n", texto:"November", pron:"no-VÉM-ber", es:"N", reg:"neutral" },
-          { id:"av-o", texto:"Oscar", pron:"ÓS-car", es:"O", reg:"neutral" },
+          { id:"av-o", texto:"Oscar", pron:"ÓS-car", es:"Letra O (Oscar)", reg:"neutral" },
           { id:"av-p", texto:"Papa", pron:"pa-PÁ", es:"P", reg:"neutral" },
           { id:"av-q", texto:"Quebec", pron:"ke-BÉC", es:"Q", reg:"neutral" },
           { id:"av-r", texto:"Romeo", pron:"RÓ-mi-o", es:"R", reg:"neutral" },
@@ -334,7 +334,7 @@ const IDIOMAS = {
           { id:"av-v", texto:"Victor", pron:"VÍK-tor", es:"V", reg:"neutral" },
           { id:"av-w", texto:"Whiskey", pron:"UÍS-ki", es:"W", reg:"neutral" },
           { id:"av-x", texto:"X-ray", pron:"ÉKS-re", es:"X", reg:"neutral" },
-          { id:"av-y", texto:"Yankee", pron:"IÁN-ki", es:"Y", reg:"neutral" },
+          { id:"av-y", texto:"Yankee", pron:"IÁN-ki", es:"Letra Y (Yankee)", reg:"neutral" },
           { id:"av-z", texto:"Zulu", pron:"SÚ-lu", es:"Z", reg:"neutral" }
         ]},
       { id:"av-numeros", titulo:"Números en la radio",
@@ -379,8 +379,8 @@ const IDIOMAS = {
         items:[
           { id:"av-roger", texto:"Roger", pron:"RÓ-yer", es:"Recibí tu mensaje (no es un sí)", reg:"neutral" },
           { id:"av-wilco", texto:"Wilco", pron:"UÍL-co", es:"Entendido y cumpliré", reg:"neutral" },
-          { id:"av-affirm", texto:"Affirm", pron:"a-FÉRM", es:"Sí", reg:"neutral" },
-          { id:"av-neg", texto:"Negative", pron:"NÉ-ga-tiv", es:"No", reg:"neutral" },
+          { id:"av-affirm", texto:"Affirm", pron:"a-FÉRM", es:"Sí (afirmar)", reg:"neutral" },
+          { id:"av-neg", texto:"Negative", pron:"NÉ-ga-tiv", es:"Negativo (no)", reg:"neutral" },
           { id:"av-again", texto:"Say again", pron:"sé-a-GUÉN", es:"Repita (nunca \"repeat\")", reg:"neutral" },
           { id:"av-stand", texto:"Standby", pron:"STÁND-ba", es:"Espere, ya lo llamo", reg:"neutral" },
           { id:"av-corr", texto:"Correction", pron:"co-RÉK-shon", es:"Me equivoqué; lo correcto es…", reg:"neutral" },
@@ -471,15 +471,15 @@ const IDIOMAS = {
           { id:"cd6-1", texto:"Someday", pron:"sámdé", es:"Algún día", reg:"neutral" },
           { id:"cd6-2", texto:"Somewhere", pron:"sámuer", es:"En algún lugar", reg:"neutral" },
           { id:"cd6-3", texto:"Something", pron:"sámzing", es:"Algo", reg:"neutral" },
-          { id:"cd6-4", texto:"Anymore", pron:"enimór", es:"Nunca más", reg:"neutral" },
+          { id:"cd6-4", texto:"Anymore", pron:"enimór", es:"Ya no", reg:"neutral" },
           { id:"cd6-5", texto:"Anything", pron:"enizing", es:"Cualquier cosa", reg:"neutral" },
           { id:"cd6-6", texto:"Anyway", pron:"eniué", es:"De todas maneras", reg:"neutral" }
         ]},
       { id:"cd-s7", titulo:"Uso del \"So\" en inglés",
         pasos:[ { tipo:"gancho", texto:"Clase de Notion: Uso del \"So\" en inglés" } ],
         items:[
-          { id:"cd7-0", texto:"So", pron:"só", es:"Entonces", reg:"neutral" },
-          { id:"cd7-1", texto:"So so", pron:"só só", es:"Más o menos", reg:"neutral" },
+          { id:"cd7-0", texto:"So", pron:"só", es:"Así que", reg:"neutral" },
+          { id:"cd7-1", texto:"So so", pron:"só só", es:"Así así (regular)", reg:"neutral" },
           { id:"cd7-2", texto:"So many", pron:"só méni", es:"Tantos", reg:"neutral" },
           { id:"cd7-3", texto:"So much", pron:"só mach", es:"Tanto", reg:"neutral" },
           { id:"cd7-4", texto:"So be it", pron:"só bi it", es:"Que así sea", reg:"neutral" },
@@ -495,7 +495,7 @@ const IDIOMAS = {
           { id:"cd8-0", texto:"Never", pron:"néver", es:"Nunca", reg:"neutral" },
           { id:"cd8-1", texto:"Never ever", pron:"néver éver", es:"Nunca jamás", reg:"neutral" },
           { id:"cd8-2", texto:"Nevermind", pron:"nevermánd", es:"No importa", reg:"neutral" },
-          { id:"cd8-3", texto:"Never more", pron:"néver mor", es:"Nunca más", reg:"neutral" },
+          { id:"cd8-3", texto:"Never more", pron:"néver mor", es:"Nunca jamás", reg:"neutral" },
           { id:"cd8-4", texto:"Never ending", pron:"néver énding", es:"Interminable", reg:"neutral" },
           { id:"cd8-5", texto:"Nevertheless", pron:"neverdelés", es:"No obstante", reg:"neutral" },
           { id:"cd8-6", texto:"Never knew", pron:"néver niú", es:"Nunca lo supe", reg:"neutral" }
@@ -508,7 +508,7 @@ const IDIOMAS = {
           { id:"cd9-2", texto:"By chance", pron:"bá chans", es:"Por casualidad", reg:"neutral" },
           { id:"cd9-3", texto:"By turns", pron:"bá térns", es:"Por turnos", reg:"neutral" },
           { id:"cd9-4", texto:"By accident", pron:"bá áksident", es:"Por accidente", reg:"neutral" },
-          { id:"cd9-5", texto:"By all means", pron:"bá ol mins", es:"Por supuesto", reg:"neutral" },
+          { id:"cd9-5", texto:"By all means", pron:"bá ol mins", es:"Claro, adelante (permiso)", reg:"neutral" },
           { id:"cd9-6", texto:"By no means", pron:"bá nó mins", es:"De ninguna manera", reg:"neutral" },
           { id:"cd9-7", texto:"Little by little", pron:"lítel bá lítel", es:"Poco a poco", reg:"neutral" },
           { id:"cd9-8", texto:"By and large", pron:"bá and larch", es:"En general", reg:"neutral" },
@@ -534,8 +534,8 @@ const IDIOMAS = {
       { id:"cd-s12", titulo:"\"Wanna\" en forma de pregunta",
         pasos:[ { tipo:"gancho", texto:"Clase de Notion: \"Wanna\" en forma de pregunta" } ],
         items:[
-          { id:"cd12-0", texto:"Wanna go?", pron:"uána gó", es:"¿Quieres ir?", reg:"neutral" },
-          { id:"cd12-1", texto:"Wanna eat?", pron:"uána it", es:"¿Quieres comer?", reg:"neutral" },
+          { id:"cd12-0", texto:"Wanna go?", pron:"uána gó", es:"¿Quieres ir? (informal)", reg:"neutral" },
+          { id:"cd12-1", texto:"Wanna eat?", pron:"uána it", es:"¿Quieres comer? (informal)", reg:"neutral" },
           { id:"cd12-2", texto:"Wanna dance?", pron:"uána dans", es:"¿Quieres bailar?", reg:"neutral" },
           { id:"cd12-3", texto:"Wanna drink?", pron:"uána drink", es:"¿Quieres beber?", reg:"neutral" },
           { id:"cd12-4", texto:"Wanna talk?", pron:"uána tok", es:"¿Quieres hablar?", reg:"neutral" }
@@ -543,7 +543,7 @@ const IDIOMAS = {
       { id:"cd-s13", titulo:"Los 5 sentidos en inglés",
         pasos:[ { tipo:"gancho", texto:"Clase de Notion: Los 5 sentidos en inglés" } ],
         items:[
-          { id:"cd13-0", texto:"Sight", pron:"sát", es:"Vista", reg:"neutral" },
+          { id:"cd13-0", texto:"Sight", pron:"sát", es:"Vista (capacidad de ver)", reg:"neutral" },
           { id:"cd13-1", texto:"Hearing", pron:"jirin", es:"Oído", reg:"neutral" },
           { id:"cd13-2", texto:"Smell", pron:"smel", es:"Olfato", reg:"neutral" },
           { id:"cd13-3", texto:"Taste", pron:"tést", es:"Gusto", reg:"neutral" },
@@ -589,7 +589,7 @@ const IDIOMAS = {
           { id:"cd17-2", texto:"Dear", pron:"diar", es:"Querida", reg:"neutral" },
           { id:"cd17-3", texto:"Baby", pron:"bébi", es:"Bebé", reg:"neutral" },
           { id:"cd17-4", texto:"Darling", pron:"darlin", es:"Tesoro", reg:"neutral" },
-          { id:"cd17-5", texto:"Sweetheart", pron:"suit jart", es:"Corazón", reg:"neutral" },
+          { id:"cd17-5", texto:"Sweetheart", pron:"suit jart", es:"Cariño (apelativo)", reg:"neutral" },
           { id:"cd17-6", texto:"Honey", pron:"jani", es:"Cariño", reg:"neutral" },
           { id:"cd17-7", texto:"My Queen", pron:"má kuin", es:"Mi reina", reg:"neutral" },
           { id:"cd17-8", texto:"Love you", pron:"lov iu", es:"Te amo", reg:"neutral" }
@@ -932,12 +932,12 @@ const IDIOMAS = {
       { id:"cd-s51", titulo:"\"Lemme\" + verbo (let me)",
         pasos:[ { tipo:"gancho", texto:"Clase de Notion: \"Lemme\" + verbo (let me)" } ],
         items:[
-          { id:"cd51-0", texto:"Lemme know", pron:"lemi nó", es:"Déjame saber", reg:"neutral" },
+          { id:"cd51-0", texto:"Lemme know", pron:"lemi nó", es:"Déjame saber (informal)", reg:"neutral" },
           { id:"cd51-1", texto:"Lemme play", pron:"lemi plé", es:"Déjame jugar", reg:"neutral" },
           { id:"cd51-2", texto:"Lemme touch", pron:"lemi tach", es:"Déjame tocar", reg:"neutral" },
-          { id:"cd51-3", texto:"Lemme talk", pron:"lemi tok", es:"Déjame hablar", reg:"neutral" },
+          { id:"cd51-3", texto:"Lemme talk", pron:"lemi tok", es:"Déjame hablar (informal)", reg:"neutral" },
           { id:"cd51-4", texto:"Lemme work", pron:"lemi uérk", es:"Déjame trabajar", reg:"neutral" },
-          { id:"cd51-5", texto:"Lemme sleep", pron:"lemi slip", es:"Déjame dormir", reg:"neutral" },
+          { id:"cd51-5", texto:"Lemme sleep", pron:"lemi slip", es:"Déjame dormir (informal)", reg:"neutral" },
           { id:"cd51-6", texto:"Lemme eat", pron:"lemi it", es:"Déjame comer", reg:"neutral" },
           { id:"cd51-7", texto:"Lemme learn", pron:"lemi lérn", es:"Déjame aprender", reg:"neutral" }
         ]},
@@ -987,7 +987,7 @@ const IDIOMAS = {
         pasos:[ { tipo:"gancho", texto:"Clase de Notion: Pronunciación \"ew\" (ew = iú)" } ],
         items:[
           { id:"cd56-0", texto:"Few", pron:"fiú", es:"Pocos", reg:"neutral" },
-          { id:"cd56-1", texto:"View", pron:"viú", es:"Vista", reg:"neutral" },
+          { id:"cd56-1", texto:"View", pron:"viú", es:"Vista (panorama)", reg:"neutral" },
           { id:"cd56-2", texto:"New", pron:"niú", es:"Nuevo", reg:"neutral" },
           { id:"cd56-3", texto:"Dew", pron:"diú", es:"Rocío", reg:"neutral" },
           { id:"cd56-4", texto:"Stew", pron:"stiú", es:"Guisar", reg:"neutral" }
@@ -997,7 +997,7 @@ const IDIOMAS = {
         items:[
           { id:"cd57-0", texto:"Wake", pron:"uék", es:"Despertar", reg:"neutral" },
           { id:"cd57-1", texto:"Fake", pron:"fék", es:"Falso", reg:"neutral" },
-          { id:"cd57-2", texto:"Make", pron:"mék", es:"Hacer", reg:"neutral" },
+          { id:"cd57-2", texto:"Make", pron:"mék", es:"Hacer (crear o fabricar algo)", reg:"neutral" },
           { id:"cd57-3", texto:"Rake", pron:"rék", es:"Rastrillo", reg:"neutral" },
           { id:"cd57-4", texto:"Take", pron:"ték", es:"Tomar", reg:"neutral" }
         ]},
@@ -1088,7 +1088,7 @@ const IDIOMAS = {
       { id:"cd-s67", titulo:"Expresiones comunes en inglés",
         pasos:[ { tipo:"gancho", texto:"Clase de Notion: Expresiones comunes en inglés" } ],
         items:[
-          { id:"cd67-0", texto:"Excuse me", pron:"exkius mi", es:"Disculpa", reg:"neutral" },
+          { id:"cd67-0", texto:"Excuse me", pron:"exkius mi", es:"Excúsame", reg:"neutral" },
           { id:"cd67-1", texto:"I need help", pron:"á nid jelp", es:"Necesito ayuda", reg:"neutral" },
           { id:"cd67-2", texto:"I'm lost", pron:"ám lost", es:"Estoy perdido", reg:"neutral" }
         ]},
@@ -1273,7 +1273,7 @@ const IDIOMAS = {
         items:[
           { id:"cd91-0", texto:"Keep dreaming", pron:"kip driming", es:"Sigue soñando", reg:"neutral" },
           { id:"cd91-1", texto:"No wonder", pron:"nou uonder", es:"No me extraña", reg:"neutral" },
-          { id:"cd91-2", texto:"Never again", pron:"never aguén", es:"Nunca más", reg:"neutral" },
+          { id:"cd91-2", texto:"Never again", pron:"never aguén", es:"Nunca más (no volver a pasar)", reg:"neutral" },
           { id:"cd91-3", texto:"Keep it up", pron:"kip it ap", es:"Sigue así", reg:"neutral" }
         ]},
       { id:"cd-s92", titulo:"Frases muy básicas (4)",
@@ -1354,7 +1354,7 @@ const IDIOMAS = {
         items:[
           { id:"cd101-0", texto:"Stay safe", pron:"sté séf", es:"Mantenerse seguro", reg:"neutral" },
           { id:"cd101-1", texto:"Dream big", pron:"drim big", es:"Sueña en grande", reg:"neutral" },
-          { id:"cd101-2", texto:"In any way", pron:"in éni ué", es:"De ninguna manera", reg:"neutral" },
+          { id:"cd101-2", texto:"In any way", pron:"in éni ué", es:"De cualquier modo", reg:"neutral" },
           { id:"cd101-3", texto:"I apologize", pron:"á apóloyas", es:"Te pido disculpas", reg:"neutral" }
         ]},
       { id:"cd-s102", titulo:"A partir de ahora",
@@ -2364,7 +2364,7 @@ const IDIOMAS = {
       { id:"cd-s266", titulo:"More or less",
         pasos:[ { tipo:"gancho", texto:"Clase de Notion: More or less" } ],
         items:[
-          { id:"cd266-0", texto:"More or less", pron:"mor or les", es:"Más o menos", reg:"neutral" }
+          { id:"cd266-0", texto:"More or less", pron:"mor or les", es:"Más o menos (aproximado)", reg:"neutral" }
         ]},
       { id:"cd-s267", titulo:"A little more",
         pasos:[ { tipo:"gancho", texto:"Clase de Notion: A little more" } ],
@@ -2389,7 +2389,7 @@ const IDIOMAS = {
       { id:"cd-s271", titulo:"Déjame saber",
         pasos:[ { tipo:"gancho", texto:"Clase de Notion: Déjame saber" } ],
         items:[
-          { id:"cd271-0", texto:"Let me know", pron:"let mi nó", es:"Déjame saber", reg:"neutral" }
+          { id:"cd271-0", texto:"Let me know", pron:"let mi nó", es:"Déjame saber (forma completa)", reg:"neutral" }
         ]},
       { id:"cd-s272", titulo:"Tenía que irme",
         pasos:[ { tipo:"gancho", texto:"Clase de Notion: Tenía que irme" } ],
@@ -2399,7 +2399,7 @@ const IDIOMAS = {
       { id:"cd-s273", titulo:"Déjame hablar",
         pasos:[ { tipo:"gancho", texto:"Clase de Notion: Déjame hablar" } ],
         items:[
-          { id:"cd273-0", texto:"Let me speak", pron:"let mi spik", es:"Déjame hablar", reg:"neutral" }
+          { id:"cd273-0", texto:"Let me speak", pron:"let mi spik", es:"Déjame hablar (forma completa)", reg:"neutral" }
         ]},
       { id:"cd-s274", titulo:"Tenía que ver",
         pasos:[ { tipo:"gancho", texto:"Clase de Notion: Tenía que ver" } ],
@@ -2509,7 +2509,7 @@ const IDIOMAS = {
       { id:"cd-s295", titulo:"Déjame dormir",
         pasos:[ { tipo:"gancho", texto:"Clase de Notion: Déjame dormir" } ],
         items:[
-          { id:"cd295-0", texto:"Let me sleep", pron:"let mi slip", es:"Déjame dormir", reg:"neutral" }
+          { id:"cd295-0", texto:"Let me sleep", pron:"let mi slip", es:"Déjame dormir (forma completa)", reg:"neutral" }
         ]},
       { id:"cd-s296", titulo:"No puedes lastimarme",
         pasos:[ { tipo:"gancho", texto:"Clase de Notion: No puedes lastimarme" } ],
@@ -2669,7 +2669,7 @@ const IDIOMAS = {
       { id:"cd-s327", titulo:"¿Quieres comer?",
         pasos:[ { tipo:"gancho", texto:"Clase de Notion: ¿Quieres comer?" } ],
         items:[
-          { id:"cd327-0", texto:"Do you wanna eat?", pron:"du iu uana it", es:"¿Quieres comer?", reg:"neutral" }
+          { id:"cd327-0", texto:"Do you wanna eat?", pron:"du iu uana it", es:"¿Quieres comer? (informal)", reg:"neutral" }
         ]},
       { id:"cd-s328", titulo:"Ten cuidado por favor",
         pasos:[ { tipo:"gancho", texto:"Clase de Notion: Ten cuidado por favor" } ],
@@ -2679,7 +2679,7 @@ const IDIOMAS = {
       { id:"cd-s329", titulo:"¿Quieres ir?",
         pasos:[ { tipo:"gancho", texto:"Clase de Notion: ¿Quieres ir?" } ],
         items:[
-          { id:"cd329-0", texto:"Do you wanna go?", pron:"du iu uana go", es:"¿Quieres ir?", reg:"neutral" }
+          { id:"cd329-0", texto:"Do you wanna go?", pron:"du iu uana go", es:"¿Quieres ir? (informal)", reg:"neutral" }
         ]},
       { id:"cd-s330", titulo:"Escúchame por favor",
         pasos:[ { tipo:"gancho", texto:"Clase de Notion: Escúchame por favor" } ],
@@ -3575,7 +3575,7 @@ const IDIOMAS = {
         ],
         items:[
           { id:"df57-0", texto:"Who are you looking for?", pron:"jú ar iú lúquin for", es:"¿A quién buscas?", reg:"neutral" },
-          { id:"df57-1", texto:"Whom are you looking for?", pron:"júm ar iú lúquin for", es:"¿A quién buscas?", reg:"neutral" }
+          { id:"df57-1", texto:"Whom are you looking for?", pron:"júm ar iú lúquin for", es:"¿A quién busca usted? (formal)", reg:"neutral" }
         ]},
       { id:"df-s58", titulo:"🏈 \"FÚTBOL\" EN ESTADOS UNIDOS: SOCCER vs FOOTBALL",
         pasos:[
@@ -3599,7 +3599,7 @@ const IDIOMAS = {
           { tipo:"pieza", grande:"May I use your phone?", pron:"me a iús iór fon", texto:"varios comentarios confirman la diferencia: \"may\" es para ser más educado/formal, \"can\" es casual pero también válido. Un comentario pregunta la diferencia entre pedir ir al \"bathroom\", \"toilet\" o \"restroom\" — esta duda específica sobre baños no se resuelve con claridad en el post (que se enfoca en may vs. can en general)." }
         ],
         items:[
-          { id:"df60-0", texto:"May I use your phone?", pron:"me a iús iór fon", es:"¿Puedo usar tu celular?", reg:"neutral" },
+          { id:"df60-0", texto:"May I use your phone?", pron:"me a iús iór fon", es:"¿Me permite usar su celular? (formal)", reg:"neutral" },
           { id:"df60-1", texto:"Can I use your phone?", pron:"can a iús iór fon", es:"¿Puedo usar tu celular?", reg:"neutral" }
         ]},
       { id:"df-s61", titulo:"✅ \"GOOD\" vs \"WELL\"",
@@ -3617,7 +3617,7 @@ const IDIOMAS = {
         ],
         items:[
           { id:"df62-0", texto:"Do you have any fruit?", pron:"du iú jav éni frut", es:"¿Tienes fruta?", reg:"neutral" },
-          { id:"df62-1", texto:"Would you like some coffee?", pron:"uud iú lák sam cófi", es:"¿Quieres café?", reg:"neutral" }
+          { id:"df62-1", texto:"Would you like some coffee?", pron:"uud iú lák sam cófi", es:"¿Le gustaría un café? (formal)", reg:"neutral" }
         ]}
     ]}
   ]},
@@ -4200,8 +4200,8 @@ const ESCENAS = {
     { p:"Hello!", pr:"je-LÓ!", es:"¡Hola!", tu:"Hi!", tuPr:"JÁ!", tuEs:"¡Hola!", clave:["Hi"], usa:["i1","i2"] },
     { p:"Good morning!", pr:"gud-MÓR-nin!", es:"¡Buenos días!", tu:"Good morning!", tuPr:"gud-MÓR-nin!", tuEs:"¡Buenos días!", clave:["Good morning"], usa:["i-gm"] },
     { p:"How are you?", pr:"ja-ÁR-iu?", es:"¿Cómo estás?", tu:"Thank you.", tuPr:"Zenkiu", tuEs:"Gracias.", clave:["Thank you"], usa:["i-ha","i-ty"] },
-    { p:"Excuse me.", pr:"exkius mi.", es:"Perdón.", tu:"Yes.", tuPr:"YES", tuEs:"Sí.", clave:["Yes"], usa:["i-em","i-ye"] },
-    { p:"Sorry.", pr:"sórri.", es:"Lo siento.", tu:"No, thank you.", tuPr:"nou, Zenkiu", tuEs:"No, gracias.", clave:["No"], usa:["i-so","i-no","i-ty"] },
+    { p:"Excuse me.", pr:"exkius mi.", es:"Excúsame.", tu:"Yes.", tuPr:"YES", tuEs:"Sí.", clave:["Yes"], usa:["i-em","i-ye"] },
+    { p:"Sorry.", pr:"sórri.", es:"Perdón / lo siento.", tu:"No, thank you.", tuPr:"nou, Zenkiu", tuEs:"No, gracias.", clave:["No"], usa:["i-so","i-no","i-ty"] },
     { p:"Please?", pr:"Plíz?", es:"¿Por favor?", tu:"Yes, please.", tuPr:"YES, Plíz", tuEs:"Sí, por favor.", clave:["please"], usa:["i-pl","i-ye"] },
     { p:"Good night!", pr:"gud-NÁT!", es:"¡Buenas noches!", tu:"Bye!", tuPr:"BÁ", tuEs:"¡Adiós!", clave:["Bye"], usa:["i-gn","i-bye"] },
     { p:"Mother.", pr:"mader.", es:"Madre.", tu:"Father.", tuPr:"fader", tuEs:"Padre.", clave:["Father"], usa:["i-mo","i3"] },
