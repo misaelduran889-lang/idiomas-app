@@ -3823,6 +3823,37 @@ const IDIOMAS = {
           { id:"cp-alg-4", texto:"Anymore", pron:"éni-mor", es:"Ya no (en frases negativas)", reg:"neutral" },
           { id:"cp-alg-5", texto:"Anything", pron:"éni-zing", es:"Cualquier cosa", reg:"neutral" },
           { id:"cp-alg-6", texto:"Anyway", pron:"éni-uei", es:"De todas maneras", reg:"neutral" }
+        ]},
+      { id:"cp-oido-s", titulo:"Clase práctica 16: Entrena tu oído (videos 19 a 33)",
+        pasos:[ { tipo:"gancho", texto:"Frases de los videos \"Entrena tu oído\" y del examen de inglés del canal." } ],
+        items:[
+          { id:"cp-oido-0", texto:"I walk to the store.", pron:"", es:"Camino a la tienda.", reg:"neutral" },
+          { id:"cp-oido-1", texto:"I buy some fresh bread.", pron:"", es:"Compro pan recién horneado.", reg:"neutral" },
+          { id:"cp-oido-2", texto:"Then I walk back home.", pron:"", es:"Luego camino de regreso.", reg:"neutral" },
+          { id:"cp-oido-3", texto:"My mom waits for me.", pron:"", es:"Mi mamá me espera.", reg:"neutral" },
+          { id:"cp-oido-4", texto:"We eat bread together.", pron:"", es:"Comemos pan juntos.", reg:"neutral" },
+          { id:"cp-oido-5", texto:"I water the plants.", pron:"", es:"Riego las plantas.", reg:"neutral" },
+          { id:"cp-oido-6", texto:"Then I clean the table.", pron:"", es:"Luego limpio la mesa.", reg:"neutral" },
+          { id:"cp-oido-7", texto:"My sister helps me.", pron:"", es:"Mi hermana me ayuda.", reg:"neutral" },
+          { id:"cp-oido-8", texto:"We finish before lunch.", pron:"", es:"Terminamos antes del almuerzo.", reg:"neutral" },
+          { id:"cp-oido-9", texto:"Then we take a break.", pron:"", es:"Luego tomamos un descanso.", reg:"neutral" },
+          { id:"cp-oido-10", texto:"I go outside for a walk.", pron:"", es:"Salgo a caminar.", reg:"neutral" },
+          { id:"cp-oido-11", texto:"The weather feels nice.", pron:"", es:"El clima se siente agradable.", reg:"neutral" },
+          { id:"cp-oido-12", texto:"I see birds in the trees.", pron:"", es:"Veo pájaros en los árboles.", reg:"neutral" },
+          { id:"cp-oido-13", texto:"A cool breeze feels good.", pron:"", es:"Una brisa fresca se siente bien.", reg:"neutral" },
+          { id:"cp-oido-14", texto:"Good night, my love.", pron:"", es:"Buenas noches, amor.", reg:"neutral" },
+          { id:"cp-oido-15", texto:"Sleep peacefully tonight.", pron:"", es:"Que descanses en paz esta noche.", reg:"neutral" },
+          { id:"cp-oido-16", texto:"May sweet dreams find you.", pron:"", es:"Que tengas dulces sueños.", reg:"neutral" },
+          { id:"cp-oido-17", texto:"You are in my heart.", pron:"", es:"Estás en mi corazón.", reg:"neutral" },
+          { id:"cp-oido-18", texto:"See you tomorrow.", pron:"", es:"Hasta mañana.", reg:"neutral" },
+          { id:"cp-oido-19", texto:"I make coffee in the morning.", pron:"", es:"Preparo café por la mañana.", reg:"neutral" },
+          { id:"cp-oido-20", texto:"My mom makes some toast.", pron:"", es:"Mi mamá prepara unas tostadas.", reg:"neutral" },
+          { id:"cp-oido-21", texto:"We sit down at the table.", pron:"", es:"Nos sentamos en la mesa.", reg:"neutral" },
+          { id:"cp-oido-22", texto:"The coffee smells so good.", pron:"", es:"El café huele muy bien.", reg:"neutral" },
+          { id:"cp-oido-23", texto:"We enjoy our breakfast.", pron:"", es:"Disfrutamos nuestro desayuno.", reg:"neutral" },
+          { id:"cp-oido-24", texto:"Meat", pron:"", es:"Carne", reg:"neutral" },
+          { id:"cp-oido-25", texto:"Chicken", pron:"", es:"Pollo", reg:"neutral" },
+          { id:"cp-oido-26", texto:"Fish", pron:"", es:"Pescado", reg:"neutral" }
         ]}
     ]}
   ]},
@@ -4332,6 +4363,7 @@ const PRACTICAS = [
   { titulo: "Video 14 · Felicitaciones", sesiones: ["cp-felic-s"] },
   { titulo: "Video 15 · Conectores", sesiones: ["cp-conect-s"] },
   { titulo: "Video 16 · Algún / ningún", sesiones: ["cp-alg-s"] },
+  { titulo: "Videos 19 a 33 · Entrena tu oído", sesiones: ["cp-oido-s"] },
 ];
 let practicaVer = null; // { n, i }
 const tarjetasPractica = n => PRACTICAS[n].sesiones.flatMap(id => (buscarSesion(id) || { items: [] }).items);
