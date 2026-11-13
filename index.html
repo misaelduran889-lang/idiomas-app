@@ -354,6 +354,10 @@ function hoy(){
         ${sig ? `<button class="btn" onclick="empezarSesion('${sig.id}')">Empezar sesión</button>` : ""}
         ${debidos ? `<button class="btn sec" onclick="ir('estudiar')">Repasar (${debidos})</button>` : ""}
       </div>
+      <div class="row">
+        <button class="btn sec" onclick="verProgreso()">Guardar / copiar mi progreso</button>
+        <button class="btn sec" onclick="cargarProgreso()">Cargar progreso de otro dispositivo</button>
+      </div>
     </div>
     <div class="card">
       <div class="muted">Avance en ${IDIOMAS[k].nombre}</div>
@@ -371,9 +375,11 @@ function hoy(){
 }
 
 function estudiar(){
+  if (sesionAct) return sesionRender();
   const debidos = repasosDebidos(estado.idioma);
   if (!debidos.length){
-    app.innerHTML = `<div class="card"><p>No tienes repasos pendientes ahora. Vuelve cuando lleguen.</p></div>`;
+    app.innerHTML = `<div class="card"><p>No tienes repasos pendientes ahora.</p>
+      <div class="row"><button class="btn" onclick="practicaLibre()">Practicar con lo que ya estudié</button></div></div>`;
     return;
   }
   mostrarTarjeta(debidos[0], debidos.length);
@@ -500,7 +506,8 @@ function preguntaVF(it, items){
 }
 function construirJuego(){
   const S = sesionAct, items = S.s.items;
-  const idx = todasSesiones(estado.idioma).findIndex(x => x.id === S.s.id);
+  // La práctica libre usa todos los tipos de pregunta (idx alto).
+  const idx = S.s.id === "libre" ? 99 : todasSesiones(estado.idioma).findIndex(x => x.id === S.s.id);
   const nOpc = idx < 2 ? 2 : idx < 4 ? 3 : 4;
   const preg = [];
   for (const it of items) preg.push({ modo: "ver", it, opc: opciones(it, items, nOpc, "es"), correcta: it.es });
@@ -565,6 +572,62 @@ function responderEscritura(){
 }
 function siguienteJuego(){ sesionAct.n++; sesionRender(); window.scrollTo(0, 0); }
 
+// ---------- Práctica con lo ya estudiado ----------
+// Toma solo las palabras que el alumno ya tiene guardadas (sesiones empezadas o terminadas).
+function estudiadoItems(k){
+  return todasSesiones(k).flatMap(s => s.items).filter(it => estado.tarjetas[it.id]);
+}
+function practicaLibre(){
+  const pool = shuffle(estudiadoItems(estado.idioma)).slice(0, 20);
+  if (pool.length < 2){
+    app.innerHTML = `<div class="card"><p>Primero estudia al menos una sesión para poder practicar.</p></div>`;
+    return;
+  }
+  sesionAct = { s: { id: "libre", titulo: "Práctica con lo que ya estudiaste", pasos: [], items: pool },
+                fase: "juego", i: 0, n: 0, total: 0, aciertos: 0, preg: null, fallos: new Set() };
+  vista = "estudiar";
+  render();
+}
+
+// ---------- Progreso: copiar y cargar (para llevarlo entre laptop y teléfono) ----------
+function verProgreso(){
+  app.innerHTML = `<div class="card"><div class="big">Mi progreso</div>
+    <p class="muted">Copia este texto y pégalo en el otro dispositivo con el botón "Cargar progreso".</p>
+    <textarea id="txt" class="idi" style="width:100%;height:160px">${JSON.stringify(estado)}</textarea>
+    <div class="row"><button class="btn" onclick="copiarProgreso()">Copiar</button>
+    <button class="btn sec" onclick="ir('hoy')">Volver</button></div>
+    <p id="msg" class="muted"></p></div>`;
+}
+function copiarProgreso(){
+  const t = document.getElementById("txt");
+  t.select();
+  const msg = document.getElementById("msg");
+  try { navigator.clipboard.writeText(t.value); msg.textContent = "Copiado."; }
+  catch (e) { document.execCommand("copy"); msg.textContent = "Copiado (si no, selecciónalo y cópialo a mano)."; }
+}
+function cargarProgreso(){
+  app.innerHTML = `<div class="card"><div class="big">Cargar progreso</div>
+    <p class="muted">Pega aquí el texto copiado del otro dispositivo. Reemplaza el progreso de este dispositivo.</p>
+    <textarea id="txt" class="idi" style="width:100%;height:160px"></textarea>
+    <div class="row"><button class="btn" onclick="aplicarProgreso()">Cargar</button>
+    <button class="btn sec" onclick="ir('hoy')">Cancelar</button></div>
+    <p id="msg" class="muted"></p></div>`;
+}
+function aplicarProgreso(){
+  try {
+    const nuevo = JSON.parse(document.getElementById("txt").value);
+    if (!nuevo || typeof nuevo !== "object" || !nuevo.tarjetas) throw new Error("formato");
+    nuevo.tarjetas ||= {}; nuevo.sesiones ||= {}; nuevo.puntajes ||= {};
+    if (!IDIOMAS[nuevo.idioma]) nuevo.idioma = "ingles";
+    estado = nuevo;
+    guardar();
+    selIdioma.value = estado.idioma;
+    ir("hoy");
+  } catch (e) {
+    document.getElementById("msg").textContent = "Ese texto no es un progreso válido.";
+  }
+}
+
 // Al terminar los juegos: recuerdo completo (sin opciones) de cada palabra.
 function finalizar(){
   const S = sesionAct;
@@ -609,6 +672,13 @@ function cerrarRecuerdo(){
 }
 function faseResultado(){
   const S = sesionAct, pct = S.total ? Math.round(S.aciertos / S.total * 100) : 0;
+  if (S.s.id === "libre"){
+    app.innerHTML = `<div class="card"><div class="big">Práctica terminada</div>
+      <p>Acertaste ${S.aciertos} de ${S.total} (${pct} %).</p>
+      <div class="row"><button class="btn" onclick="ir('estudiar')">Volver a Repasar</button></div></div>`;
+    sesionAct = null;
+    return;
+  }
   const pasa = pct >= 60;
   if (pasa) estado.sesiones[S.s.id] = true;
   estado.puntajes[S.s.id] = pct;
