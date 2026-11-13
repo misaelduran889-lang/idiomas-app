@@ -25,6 +25,7 @@
   .letra { font-size:88px; font-weight:800; text-align:center; line-height:1.1; margin:12px 0; }
   .pron { font-size:20px; color:var(--acc); margin:6px 0; }
   .tag { display:inline-block; font-size:12px; padding:3px 9px; border-radius:99px; border:1px solid var(--line); color:var(--sub); margin-right:6px; }
+  .tag.dir { color:var(--acc); border-color:var(--acc); }
   .tag.formal { color:#60a5fa; } .tag.informal { color:var(--warn); }
   .row { display:flex; gap:10px; flex-wrap:wrap; margin-top:12px; }
   .bar { height:8px; background:#0f1626; border-radius:99px; overflow:hidden; margin-top:6px; }
@@ -42,6 +43,7 @@
   @keyframes boca { from { transform: scaleY(.3); } to { transform: scaleY(2); } }
   .subt { background:rgba(15,22,38,.88); border:1px solid var(--line); border-radius:14px; padding:14px; margin-top:12px; }
   .pad { height:80px; }
+  .aviso { position:fixed; left:12px; right:12px; bottom:76px; z-index:20; background:#3b2410; border:1px solid var(--warn); color:var(--txt); border-radius:12px; padding:12px; display:flex; gap:10px; align-items:center; justify-content:space-between; font-size:14px; max-width:696px; margin:0 auto; }
   table td { padding:6px 4px; border-bottom:1px solid var(--line); }
   /* Movimiento suave: tarjetas que aparecen y botones que responden al toque */
   @keyframes subir { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:none; } }
@@ -3716,6 +3718,227 @@ const IDIOMAS = {
           { id:"c-gas", texto:"안녕히 가세요", pron:"AN-NYÓNG-HI GA-SÉ-YO", es:"Adiós (a alguien que se va)", reg:"formal" }
         ]}
     ]}
+  ]},
+  japones: { nombre: "Japonés", lang: "ja-JP",
+    guia: [
+      "En japonés no hay sílaba fuerte: todas duran lo mismo. Por eso la pronunciación va en minúsculas y separada en sílabas: \"ko-ni-chi-ua\".",
+      "Las vocales a, i, u, e, o se dicen igual que en español, cortas y limpias.",
+      "Una vocal doble (\"oo\", \"uu\") se alarga: dura el doble. \"koo\" no es \"ko\".",
+      "\"j\" se dice como la j suave del Caribe (como una h con aire): は = \"ja\".",
+      "\"sh\" es como pedir silencio: \"shhh\". \"ch\" es como en \"chino\". \"ts\" es una t y una s pegadas.",
+      "\"y\" antes de vocal suena como la \"y\" de \"yo\". \"z\" es una s que zumba, como una abeja.",
+      "La u final de \"des\" y \"mas\" casi no se oye: です se dice \"des\", ます se dice \"mas\".",
+      "La partícula は se escribe con ha pero se dice \"ua\". La partícula を se dice \"o\"."
+    ],
+    unidades: [
+    { titulo: "1. Hiragana: los primeros sonidos", sesiones: [
+      { id:"ja-1a", titulo:"Las 5 vocales: あいうえお",
+        pasos:[
+          { tipo:"gancho", texto:"¿Sabías que en japonés solo hay 5 vocales, y suenan igual que en español? Hoy vas a leer tus primeras letras japonesas." },
+          { tipo:"regla", titulo:"Regla 1: cada letra es una sílaba", grande:"あ = a", pron:"a", texto:"El hiragana no tiene letras sueltas como el español: cada signo es una sílaba completa. Empezamos por las vocales, que van solas." },
+          { tipo:"pieza", grande:"あ  い", pron:"a  i", texto:"あ parece una persona con los brazos abiertos que dice \"¡aaa!\". い son dos palitos de pie, como dos letras i." },
+          { tipo:"pieza", grande:"あ  い  う", pron:"a  i  u", texto:"う parece una oreja con un pelito arriba: la oreja escucha \"uuu\". Di la u sin redondear tanto los labios." },
+          { tipo:"pieza", grande:"あ  い  う  え  お", pron:"a  i  u  e  o", texto:"え parece una persona caminando que dice \"¡eh, espera!\". お parece una pelota de golf con su palo: \"¡oh, qué tiro!\"." },
+          { tipo:"reto", grande:"お  い  あ", texto:"Antes de seguir, lee en voz alta estas tres letras. Respuesta: o, i, a." },
+          { tipo:"resumen", texto:"1) En japonés hay 5 vocales. 2) Suenan como en español. 3) Cada signo es una sílaba." }
+        ],
+        items:[
+          { id:"j-a", texto:"あ", pron:"a", romaji:"a", es:"vocal a" },
+          { id:"j-i", texto:"い", pron:"i", romaji:"i", es:"vocal i" },
+          { id:"j-u", texto:"う", pron:"u", romaji:"u", es:"vocal u (labios sin redondear)" },
+          { id:"j-e", texto:"え", pron:"e", romaji:"e", es:"vocal e" },
+          { id:"j-o", texto:"お", pron:"o", romaji:"o", es:"vocal o" }
+        ]},
+      { id:"ja-1b", titulo:"Fila K: かきくけこ",
+        pasos:[
+          { tipo:"gancho", texto:"¿Qué pasa si a una vocal le pones dos rayitas al lado? Nace la fila K." },
+          { tipo:"regla", titulo:"Regla 2: consonante + vocal", grande:"か = k + a", pron:"ka", texto:"Cada fila del hiragana es una consonante con las 5 vocales en el mismo orden: a, i, u, e, o." },
+          { tipo:"pieza", grande:"か  き  く  け  こ", pron:"ka  ki  ku  ke  ko", texto:"く parece el pico de un pájaro que hace \"ku ku\". こ son dos rayitas, como dos cocos. Lee la fila de izquierda a derecha." },
+          { tipo:"reto", grande:"こ  か  け", texto:"Léelas en voz alta. Respuesta: ko, ka, ke." },
+          { tipo:"resumen", texto:"1) Fila K = ka, ki, ku, ke, ko. 2) El orden de las vocales siempre es a, i, u, e, o." }
+        ],
+        items:[
+          { id:"j-ka", texto:"か", pron:"ka", romaji:"ka", es:"sílaba ka" },
+          { id:"j-ki", texto:"き", pron:"ki", romaji:"ki", es:"sílaba ki" },
+          { id:"j-ku", texto:"く", pron:"ku", romaji:"ku", es:"sílaba ku" },
+          { id:"j-ke", texto:"け", pron:"ke", romaji:"ke", es:"sílaba ke" },
+          { id:"j-ko", texto:"こ", pron:"ko", romaji:"ko", es:"sílaba ko" }
+        ]},
+      { id:"ja-1c", titulo:"Fila S: さしすせそ",
+        pasos:[
+          { tipo:"gancho", texto:"En esta fila hay una sílaba tramposa. ¿Adivinas cuál?" },
+          { tipo:"pieza", grande:"さ  し  す  せ  そ", pron:"sa  shi  su  se  so", texto:"Todas suenan con s, menos し, que se dice \"shi\", como cuando pides silencio." },
+          { tipo:"boca", grande:"し", pron:"shi", texto:"Para decir し, pon los labios un poco hacia adelante y deja salir el aire como \"shhh\", y termina con i." },
+          { tipo:"reto", grande:"し  さ  そ", texto:"Léelas. Respuesta: shi, sa, so." },
+          { tipo:"resumen", texto:"1) Fila S = sa, shi, su, se, so. 2) し se dice shi, no si." }
+        ],
+        items:[
+          { id:"j-sa", texto:"さ", pron:"sa", romaji:"sa", es:"sílaba sa" },
+          { id:"j-shi", texto:"し", pron:"shi", romaji:"shi", es:"sílaba shi (no \"si\")" },
+          { id:"j-su", texto:"す", pron:"su", romaji:"su", es:"sílaba su" },
+          { id:"j-se", texto:"せ", pron:"se", romaji:"se", es:"sílaba se" },
+          { id:"j-so", texto:"そ", pron:"so", romaji:"so", es:"sílaba so" }
+        ]},
+      { id:"ja-1d", titulo:"Fila T: たちつてと",
+        pasos:[
+          { tipo:"gancho", texto:"Aquí hay dos trampas, no una. Mira bien la segunda y la tercera." },
+          { tipo:"pieza", grande:"た  ち  つ  て  と", pron:"ta  chi  tsu  te  to", texto:"ち se dice \"chi\", como en chino. つ se dice \"tsu\": una t y una s pegadas, en un solo golpe." },
+          { tipo:"boca", grande:"つ", pron:"tsu", texto:"Pon la lengua como para decir t y suéltala en una s rápida: \"ts\". Luego añade una u corta." },
+          { tipo:"reto", grande:"つ  ち  と", texto:"Léelas. Respuesta: tsu, chi, to." },
+          { tipo:"resumen", texto:"1) Fila T = ta, chi, tsu, te, to. 2) ち es chi y つ es tsu." }
+        ],
+        items:[
+          { id:"j-ta", texto:"た", pron:"ta", romaji:"ta", es:"sílaba ta" },
+          { id:"j-chi", texto:"ち", pron:"chi", romaji:"chi", es:"sílaba chi (no \"ti\")" },
+          { id:"j-tsu", texto:"つ", pron:"tsu", romaji:"tsu", es:"sílaba tsu (no \"tu\")" },
+          { id:"j-te", texto:"て", pron:"te", romaji:"te", es:"sílaba te" },
+          { id:"j-to", texto:"と", pron:"to", romaji:"to", es:"sílaba to" }
+        ]},
+      { id:"ja-1e", titulo:"Fila N: なにぬねの",
+        pasos:[
+          { tipo:"gancho", texto:"Esta fila no tiene trampas: todo suena como en español." },
+          { tipo:"pieza", grande:"な  に  ぬ  ね  の", pron:"na  ni  nu  ne  no", texto:"の parece una señal de \"no pasar\" redonda: \"no\". ね tiene una colita enrollada, como la de un gato, y gato en japonés es ねこ (ne-ko)." },
+          { tipo:"reto", grande:"の  ね  に", texto:"Léelas. Respuesta: no, ne, ni." },
+          { tipo:"resumen", texto:"1) Fila N = na, ni, nu, ne, no. 2) Ya sabes 25 signos: las vocales y las filas K, S, T y N." }
+        ],
+        items:[
+          { id:"j-na", texto:"な", pron:"na", romaji:"na", es:"sílaba na" },
+          { id:"j-ni", texto:"に", pron:"ni", romaji:"ni", es:"sílaba ni" },
+          { id:"j-nu", texto:"ぬ", pron:"nu", romaji:"nu", es:"sílaba nu" },
+          { id:"j-ne", texto:"ね", pron:"ne", romaji:"ne", es:"sílaba ne" },
+          { id:"j-no", texto:"の", pron:"no", romaji:"no", es:"sílaba no" }
+        ]}
+    ]},
+    { titulo: "2. Primeras palabras", sesiones: [
+      { id:"ja-2a", titulo:"Palabras con vocales y K",
+        pasos:[
+          { tipo:"gancho", texto:"Con lo que ya sabes puedes leer palabras reales. ¿Lista la primera?" },
+          { tipo:"pieza", grande:"あ + か = あか", pron:"a-ka", texto:"Juntas las sílabas en orden y lees de izquierda a derecha. あか (a-ka) significa \"rojo\"." },
+          { tipo:"reto", grande:"かお", texto:"¿Cómo se lee? Respuesta: ka-o, que significa \"cara\"." },
+          { tipo:"resumen", texto:"1) Las palabras son sílabas juntas. 2) Se leen de izquierda a derecha." }
+        ],
+        items:[
+          { id:"j-ai", texto:"あい", pron:"a-i", romaji:"ai", es:"amor" },
+          { id:"j-ie", texto:"いえ", pron:"i-e", romaji:"ie", es:"casa" },
+          { id:"j-ue", texto:"うえ", pron:"u-e", romaji:"ue", es:"arriba" },
+          { id:"j-aka", texto:"あか", pron:"a-ka", romaji:"aka", es:"rojo" },
+          { id:"j-kao", texto:"かお", pron:"ka-o", romaji:"kao", es:"cara" },
+          { id:"j-eki", texto:"えき", pron:"e-ki", romaji:"eki", es:"estación (de tren)" },
+          { id:"j-koko", texto:"ここ", pron:"ko-ko", romaji:"koko", es:"aquí" }
+        ]},
+      { id:"ja-2b", titulo:"Palabras con S y T",
+        pasos:[
+          { tipo:"gancho", texto:"¿Sabes leer la comida japonesa más famosa? Ya tienes las letras." },
+          { tipo:"pieza", grande:"す + し = すし", pron:"su-shi", texto:"すし (su-shi) es sushi. Fíjate en la し: suena shi." },
+          { tipo:"pieza", grande:"く + ち = くち", pron:"ku-chi", texto:"くち (ku-chi) significa \"boca\". La ち suena chi." },
+          { tipo:"resumen", texto:"1) Ya lees palabras de 2 y 3 sílabas. 2) Fíjate en shi, chi y tsu." }
+        ],
+        items:[
+          { id:"j-sushi", texto:"すし", pron:"su-shi", romaji:"sushi", es:"sushi" },
+          { id:"j-isu", texto:"いす", pron:"i-su", romaji:"isu", es:"silla" },
+          { id:"j-asa", texto:"あさ", pron:"a-sa", romaji:"asa", es:"mañana (la parte del día)" },
+          { id:"j-kasa", texto:"かさ", pron:"ka-sa", romaji:"kasa", es:"paraguas" },
+          { id:"j-kuchi", texto:"くち", pron:"ku-chi", romaji:"kuchi", es:"boca" },
+          { id:"j-te2", texto:"て", pron:"te", romaji:"te", es:"mano" },
+          { id:"j-soto", texto:"そと", pron:"so-to", romaji:"soto", es:"afuera" },
+          { id:"j-tsukue", texto:"つくえ", pron:"tsu-ku-e", romaji:"tsukue", es:"escritorio" }
+        ]},
+      { id:"ja-2c", titulo:"Palabras con N",
+        pasos:[
+          { tipo:"gancho", texto:"Ahora, animales y cosas de todos los días." },
+          { tipo:"pieza", grande:"ね + こ = ねこ", pron:"ne-ko", texto:"ねこ (ne-ko) es \"gato\". いぬ (i-nu) es \"perro\"." },
+          { tipo:"reto", grande:"なに", texto:"¿Cómo se lee y qué significa? Respuesta: na-ni, \"¿qué?\"." },
+          { tipo:"resumen", texto:"1) Ya sabes 25 signos y más de 20 palabras. 2) Repásalas en voz alta." }
+        ],
+        items:[
+          { id:"j-neko", texto:"ねこ", pron:"ne-ko", romaji:"neko", es:"gato" },
+          { id:"j-inu", texto:"いぬ", pron:"i-nu", romaji:"inu", es:"perro" },
+          { id:"j-nani", texto:"なに", pron:"na-ni", romaji:"nani", es:"¿qué?" },
+          { id:"j-natsu", texto:"なつ", pron:"na-tsu", romaji:"natsu", es:"verano" },
+          { id:"j-niku", texto:"にく", pron:"ni-ku", romaji:"niku", es:"carne" },
+          { id:"j-okane", texto:"おかね", pron:"o-ka-ne", romaji:"okane", es:"dinero" }
+        ]}
+    ]},
+    { titulo: "3. Saludos", sesiones: [
+      { id:"ja-3a", titulo:"Saludar durante el día",
+        pasos:[
+          { tipo:"gancho", texto:"En español dices \"hola\" a cualquier hora. ¿En japonés también? No: el saludo cambia según la hora." },
+          { tipo:"regla", titulo:"Regla 3: un saludo para cada hora", grande:"おはよう ・ こんにちは ・ こんばんは", pron:"o-ja-yoo · kon-ni-chi-ua · kom-ban-ua", texto:"Mañana: おはようございます. Mediodía y tarde: こんにちは. Noche: こんばんは." },
+          { tipo:"pieza", grande:"は → ua", pron:"ua", texto:"En こんにちは y こんばんは, la última は se dice \"ua\", no \"ja\". Es una partícula: se escribe ha pero suena ua." },
+          { tipo:"resumen", texto:"1) Mañana: o-ja-yoo go-zai-mas. 2) Tarde: kon-ni-chi-ua. 3) Noche: kom-ban-ua." }
+        ],
+        items:[
+          { id:"j-ohayo", texto:"おはようございます", pron:"o-ja-yoo go-zai-mas", romaji:"ohayou gozaimasu", es:"Buenos días (formal)", reg:"formal" },
+          { id:"j-ohayo2", texto:"おはよう", pron:"o-ja-yoo", romaji:"ohayou", es:"Buenos días (informal, con amigos)", reg:"informal" },
+          { id:"j-konnichiwa", texto:"こんにちは", pron:"kon-ni-chi-ua", romaji:"konnichiwa", es:"Hola / buenas tardes", reg:"neutral" },
+          { id:"j-konbanwa", texto:"こんばんは", pron:"kom-ban-ua", romaji:"konbanwa", es:"Buenas noches (al llegar)", reg:"neutral" },
+          { id:"j-oyasumi", texto:"おやすみなさい", pron:"o-ya-su-mi-na-sai", romaji:"oyasuminasai", es:"Buenas noches (al irse a dormir)", reg:"neutral" },
+          { id:"j-sayonara", texto:"さようなら", pron:"sa-yoo-na-ra", romaji:"sayounara", es:"Adiós", reg:"neutral" }
+        ]},
+      { id:"ja-3b", titulo:"Gracias, sí, no y perdón",
+        pasos:[
+          { tipo:"gancho", texto:"Con 5 palabras puedes ser educado en cualquier lugar de Japón." },
+          { tipo:"pieza", grande:"ありがとうございます", pron:"a-ri-ga-too go-zai-mas", texto:"Es \"muchas gracias\" formal. Con amigos basta ありがとう (a-ri-ga-too)." },
+          { tipo:"pieza", grande:"すみません", pron:"su-mi-ma-sen", texto:"Sirve para pedir perdón y también para llamar la atención: \"disculpe\"." },
+          { tipo:"resumen", texto:"1) Gracias: a-ri-ga-too. 2) Sí: jai. No: ii-e. 3) Disculpe: su-mi-ma-sen." }
+        ],
+        items:[
+          { id:"j-arigato", texto:"ありがとうございます", pron:"a-ri-ga-too go-zai-mas", romaji:"arigatou gozaimasu", es:"Muchas gracias (formal)", reg:"formal" },
+          { id:"j-arigato2", texto:"ありがとう", pron:"a-ri-ga-too", romaji:"arigatou", es:"Gracias (informal)", reg:"informal" },
+          { id:"j-hai", texto:"はい", pron:"jai", romaji:"hai", es:"Sí", reg:"neutral" },
+          { id:"j-iie", texto:"いいえ", pron:"ii-e", romaji:"iie", es:"No", reg:"neutral" },
+          { id:"j-sumimasen", texto:"すみません", pron:"su-mi-ma-sen", romaji:"sumimasen", es:"Disculpe / perdón", reg:"formal" },
+          { id:"j-gomen", texto:"ごめんなさい", pron:"go-men-na-sai", romaji:"gomennasai", es:"Lo siento", reg:"neutral" }
+        ]}
+    ]},
+    { titulo: "4. Presentarte", sesiones: [
+      { id:"ja-4a", titulo:"Me llamo… y soy de…",
+        pasos:[
+          { tipo:"gancho", texto:"¿Cómo dices \"soy Kevin\" en japonés? Con una fórmula que se va llenando." },
+          { tipo:"regla", titulo:"Regla 4: la fórmula", grande:"わたしは ___ です", pron:"ua-ta-shi ua ___ des", texto:"わたし = yo. は (ua) marca de quién hablas. です (des) = soy / es. El verbo va al final, no en el medio como en español." },
+          { tipo:"pieza", grande:"わたしは ケビン です", pron:"ua-ta-shi ua ke-bin des", texto:"\"Yo soy Kevin\". ケビン está en katakana, la escritura para nombres extranjeros. No hace falta memorizar el katakana hoy." },
+          { tipo:"pieza", grande:"はじめまして", pron:"ja-yi-me-mash-te", texto:"Se dice la primera vez que conoces a alguien: \"mucho gusto\". Se cierra con よろしくおねがいします." },
+          { tipo:"resumen", texto:"1) わたしは ___ です = yo soy ___. 2) El verbo va al final. 3) Mucho gusto: ja-yi-me-mash-te." }
+        ],
+        items:[
+          { id:"j-hajime", texto:"はじめまして", pron:"ja-yi-me-mash-te", romaji:"hajimemashite", es:"Mucho gusto (la primera vez)", reg:"neutral" },
+          { id:"j-watashi", texto:"わたし", pron:"ua-ta-shi", romaji:"watashi", es:"yo", reg:"neutral" },
+          { id:"j-desu", texto:"です", pron:"des", romaji:"desu", es:"soy / es (al final de la frase)", reg:"formal" },
+          { id:"j-kevin", texto:"わたしはケビンです", pron:"ua-ta-shi ua ke-bin des", romaji:"watashi wa kebin desu", es:"Yo soy Kevin", reg:"formal" },
+          { id:"j-domi", texto:"ドミニカきょうわこくからきました", pron:"do-mi-ni-ka kyoo-ua-ko-ku ka-ra ki-mash-ta", romaji:"dominika kyouwakoku kara kimashita", es:"Vengo de la República Dominicana", reg:"formal" },
+          { id:"j-yoroshiku", texto:"よろしくおねがいします", pron:"yo-ro-shi-ku o-ne-gai-shi-mas", romaji:"yoroshiku onegaishimasu", es:"Encantado (se dice al presentarte, para quedar bien)", reg:"formal" }
+        ]}
+    ]},
+    { titulo: "5. En el aeropuerto", sesiones: [
+      { id:"ja-5a", titulo:"Palabras del aeropuerto",
+        pasos:[
+          { tipo:"gancho", texto:"Llegas al aeropuerto de Narita. ¿Qué palabras vas a ver y oír primero?" },
+          { tipo:"pieza", grande:"くうこう", pron:"kuu-koo", texto:"\"Aeropuerto\". Las vocales dobles se alargan: kuu y koo duran el doble." },
+          { tipo:"pieza", grande:"ひこうき", pron:"ji-koo-ki", texto:"\"Avión\". ひ se dice \"ji\", con la j suave." },
+          { tipo:"resumen", texto:"1) Aeropuerto: kuu-koo. 2) Avión: ji-koo-ki. 3) Alarga las vocales dobles." }
+        ],
+        items:[
+          { id:"j-kuukou", texto:"くうこう", pron:"kuu-koo", romaji:"kuukou", es:"aeropuerto", reg:"neutral" },
+          { id:"j-hikouki", texto:"ひこうき", pron:"ji-koo-ki", romaji:"hikouki", es:"avión", reg:"neutral" },
+          { id:"j-pasu", texto:"パスポート", pron:"pa-su-poo-to", romaji:"pasupooto", es:"pasaporte", reg:"neutral" },
+          { id:"j-kippu", texto:"きっぷ", pron:"kip-pu", romaji:"kippu", es:"boleto (de tren o bus)", reg:"neutral" },
+          { id:"j-toire", texto:"トイレ", pron:"to-i-re", romaji:"toire", es:"baño", reg:"neutral" }
+        ]},
+      { id:"ja-5b", titulo:"Frases para pedir ayuda",
+        pasos:[
+          { tipo:"gancho", texto:"Necesitas el baño y no sabes dónde está. ¿Qué dices?" },
+          { tipo:"regla", titulo:"Regla 5: preguntar con か", grande:"___ は どこですか", pron:"___ ua do-ko des ka", texto:"どこ = dónde. か al final convierte la frase en pregunta, como los signos ¿? del español." },
+          { tipo:"pieza", grande:"トイレはどこですか", pron:"to-i-re ua do-ko des ka", texto:"\"¿Dónde está el baño?\". Cambia トイレ por otra palabra y tienes otra pregunta." },
+          { tipo:"resumen", texto:"1) ___ ua do-ko des ka = ¿dónde está ___? 2) か al final = pregunta." }
+        ],
+        items:[
+          { id:"j-dokodesuka", texto:"トイレはどこですか", pron:"to-i-re ua do-ko des ka", romaji:"toire wa doko desu ka", es:"¿Dónde está el baño?", reg:"formal" },
+          { id:"j-ikura", texto:"いくらですか", pron:"i-ku-ra des ka", romaji:"ikura desu ka", es:"¿Cuánto cuesta?", reg:"formal" },
+          { id:"j-kudasai", texto:"これをください", pron:"ko-re o ku-da-sai", romaji:"kore o kudasai", es:"Deme esto, por favor", reg:"formal" },
+          { id:"j-eigo", texto:"えいごをはなせますか", pron:"ei-go o ja-na-se-mas ka", romaji:"eigo o hanasemasu ka", es:"¿Puede hablar inglés?", reg:"formal" },
+          { id:"j-wakarimasen", texto:"わかりません", pron:"ua-ka-ri-ma-sen", romaji:"wakarimasen", es:"No entiendo", reg:"formal" }
+        ]}
+    ]}
   ]}
 };
 
@@ -3828,21 +4051,7 @@ function hoy(){
       <div class="bar"><div style="width:${Math.round(hechas / lista.length * 100)}%"></div></div>
       <p class="muted">${hechas} de ${lista.length} sesiones aprobadas (60 % para avanzar).</p>
     </div>
-    <div class="card">
-      <details>
-        <summary class="big" style="cursor:pointer">📖 Cómo leer las pronunciaciones</summary>
-        <ul class="muted" style="margin-top:10px;line-height:1.6">
-          <li>La parte en MAYÚSCULA es la sílaba que se dice más fuerte.</li>
-          <li>Lo que se escribe como en español se dice igual: "ti", "lo", "ni".</li>
-          <li>"ei" se dice como la <b>é</b> seguida de <b>i</b>: la letra A es "ei".</li>
-          <li>"ai" se dice como <b>á</b> seguida de <b>i</b>: la letra I es "ai", y "bye" es "BÁI".</li>
-          <li>"ou" se dice como <b>ó</b> seguida de <b>u</b>: "no" es "nou", y la letra O es "ou".</li>
-          <li>"iu" se dice <b>iú</b>, como en "you".</li>
-          <li>El sonido "th" de "thank" se escribe con "z": "Zenkiu" es "Thank you". Pon la lengua entre los dientes.</li>
-          <li>Cuando la pronunciación tiene dos vocales juntas, léelas las dos. No te quedes con una sola.</li>
-        </ul>
-      </details>
-    </div>
+    ${guiaHTML(k)}
     <div class="card">
       <div class="muted">Llevar mi progreso a otro dispositivo</div>
       <p class="muted">Muestra tu código, cópialo y pégalo en el otro teléfono o laptop, en esta misma sección.</p>
@@ -3850,6 +4059,28 @@ function hoy(){
       <textarea id="codigo" class="idi" style="width:100%;min-height:80px;margin-top:10px" placeholder="Pega aquí el código"></textarea>
       <div class="row"><button class="btn" onclick="cargarCodigo()">Cargar código</button></div>
       <div id="msgCodigo" class="muted" style="margin-top:8px"></div>
+    </div>`;
+}
+
+const GUIA_INGLES = [
+  "La parte en MAYÚSCULA es la sílaba que se dice más fuerte.",
+  `Lo que se escribe como en español se dice igual: "ti", "lo", "ni".`,
+  `"ei" se dice como la <b>é</b> seguida de <b>i</b>: la letra A es "ei".`,
+  `"ai" se dice como <b>á</b> seguida de <b>i</b>: la letra I es "ai", y "bye" es "BÁI".`,
+  `"ou" se dice como <b>ó</b> seguida de <b>u</b>: "no" es "nou", y la letra O es "ou".`,
+  `"iu" se dice <b>iú</b>, como en "you".`,
+  `El sonido "th" de "thank" se escribe con "z": "Zenkiu" es "Thank you". Pon la lengua entre los dientes.`,
+  "Cuando la pronunciación tiene dos vocales juntas, léelas las dos. No te quedes con una sola."
+];
+// Guía de cómo leer la pronunciación: cada idioma trae la suya (campo guia); el inglés usa GUIA_INGLES.
+function guiaHTML(k){
+  const g = IDIOMAS[k].guia || (k === "ingles" ? GUIA_INGLES : null);
+  if (!g) return "";
+  return `<div class="card">
+      <details>
+        <summary class="big" style="cursor:pointer">📖 Cómo leer las pronunciaciones</summary>
+        <ul class="muted" style="margin-top:10px;line-height:1.6">${g.map(x => `<li>${x}</li>`).join("")}</ul>
+      </details>
     </div>`;
 }
 
@@ -3927,7 +4158,7 @@ function sesionRender(){
 }
 function faseCambiar(f){ sesionAct.fase = f; sesionAct.i = 0; sesionRender(); window.scrollTo(0, 0); }
 
-const TIPO_TXT = { gancho: "Pregunta", pieza: "Pieza", regla: "Regla", boca: "Boca" };
+const TIPO_TXT = { gancho: "Pregunta", pieza: "Pieza", regla: "Regla", boca: "Boca", reto: "Reto", resumen: "Resumen" };
 function fasePasos(){
   const S = sesionAct, pasos = S.s.pasos, p = pasos[S.i];
   app.innerHTML = `<div class="card">
@@ -4006,6 +4237,10 @@ function faseJuego(){
   if (!S.preg) construirJuego();
   if (S.n >= S.preg.length) return finalizar();
   const q = S.preg[S.n];
+  const L = IDIOMAS[estado.idioma].nombre;
+  const dir = { ver: q.campo === "pron" ? `${L} → pronunciación` : `${L} → Español`,
+                oir: `Audio → ${L}`, vf: q.campo === "pron" ? `${L} → pronunciación` : `${L} → Español`,
+                escribir: `Español → ${L}` }[q.modo];
   let cabeza;
   if (q.modo === "ver") cabeza = q.campo === "pron"
     ? `<div class="muted">¿Cómo se pronuncia?</div><div class="big" style="margin-top:6px">${q.it.texto}</div>`
@@ -4016,13 +4251,14 @@ function faseJuego(){
     : `<div class="muted">Verdadero o falso</div><div class="big" style="margin-top:6px;font-size:22px">"${q.it.texto}" significa "${q.afirm}"</div>`;
   else cabeza = `<div class="muted">Escribe en ${IDIOMAS[estado.idioma].nombre.toLowerCase()} la traducción de esta palabra en español:</div><div class="big" style="margin-top:6px">${q.it.es}</div>`;
   const cuerpo = q.modo === "escribir"
-    ? `<input id="resp" class="idi" style="width:100%;font-size:18px;padding:12px;margin-top:12px" autocomplete="off" autocapitalize="none" placeholder="Escríbela aquí">
+    ? `<input id="resp" class="idi" style="width:100%;font-size:18px;padding:12px;margin-top:12px" autocomplete="off" autocapitalize="none" placeholder="${q.it.romaji ? "En japonés o en letras latinas (ej.: " + q.it.romaji + ")" : "Escríbela aquí"}">
        <div class="row"><button class="btn" onclick="responderEscritura()">Comprobar</button></div>`
     : `<div id="opc">${q.opc.map((o, j) => `<button class="opt" onclick="responderJuego(${j})">${o}</button>`).join("")}</div>`;
   app.innerHTML = `<div class="card">
     <div class="muted">${S.s.titulo} · pregunta ${S.n + 1} de ${S.preg.length}</div>
     <div class="bar"><div style="width:${S.n / S.preg.length * 100}%"></div></div>
-    <div style="margin-top:14px">${cabeza}</div>
+    <div style="margin-top:12px"><span class="tag dir">${dir}</span></div>
+    <div style="margin-top:10px">${cabeza}</div>
     ${cuerpo}
     <div id="fb"></div></div>`;
   if (q.modo === "oir") hablar(q.it.texto);
@@ -4054,11 +4290,12 @@ function responderEscritura(){
   const input = document.getElementById("resp");
   if (input.disabled) return;
   const norm = s => s.toLowerCase().replace(/\s+/g, "").replace(/[.,!?¿¡'’-]/g, "");
-  const ok = norm(input.value) === norm(q.it.texto);
+  const validas = [q.it.texto, q.it.romaji].filter(Boolean).map(norm);
+  const ok = validas.includes(norm(input.value).replace(/[。、！？]/g, ""));
   input.disabled = true;
   S.total++;
   if (ok) S.aciertos++; else S.fallos.add(q.it.id);
-  marcarFeedback(ok, q.it.texto);
+  marcarFeedback(ok, q.it.romaji ? `${q.it.texto} (${q.it.romaji}) · se dice: ${q.it.pron}` : q.it.texto);
 }
 function siguienteJuego(){ sesionAct.n++; sesionRender(); window.scrollTo(0, 0); }
 
@@ -4136,7 +4373,8 @@ function faseRecuerdo(){
   app.innerHTML = `<div class="card">
     <div class="muted">${S.s.titulo} · recuerdo ${S.i + 1} de ${items.length}</div>
     <div class="bar"><div style="width:${S.i / items.length * 100}%"></div></div>
-    <p class="muted" style="margin-top:12px">Sin mirar, ¿cómo se dice?</p>
+    <div style="margin-top:12px"><span class="tag dir">Español → ${IDIOMAS[estado.idioma].nombre}</span></div>
+    <p class="muted" style="margin-top:8px">Sin mirar, ¿cómo se dice en ${IDIOMAS[estado.idioma].nombre.toLowerCase()}?</p>
     <div class="big" style="font-size:24px">${it.es}</div>
     ${cuerpo}
   </div>`;
@@ -4250,6 +4488,17 @@ const ESCENAS = {
     { p:"안녕히 가세요.", pr:"AN-NYÓNG-HI GA-SÉ-YO.", es:"Adiós (a alguien que se va).", tu:"안녕히 가세요.", tuPr:"AN-NYÓNG-HI GA-SÉ-YO.", tuEs:"Adiós.", clave:["안녕히"], usa:["c-gas"] },
     { p:"사과.", pr:"SA-GWA.", es:"Manzana.", tu:"하나.", tuPr:"HA-NA.", tuEs:"Uno.", clave:["하나"], usa:["w-sagwa","w-hana"] },
     { p:"나라.", pr:"NA-RA.", es:"País.", tu:"바나나.", tuPr:"BA-NA-NA.", tuEs:"Banana.", clave:["바나나"], usa:["w-nara","w-banana"] }
+  ]},
+  japones: { titulo: "Llamada con Mateo", lang: "ja-JP", lineas: [
+    { p:"こんにちは!", pr:"kon-ni-chi-ua!", es:"¡Hola!", tu:"こんにちは!", tuPr:"kon-ni-chi-ua!", tuEs:"¡Hola!", clave:[["こんにちは","今日は","konnichiwa"]], usa:["j-konnichiwa"] },
+    { p:"おはようございます!", pr:"o-ja-yoo go-zai-mas!", es:"¡Buenos días!", tu:"おはようございます!", tuPr:"o-ja-yoo go-zai-mas!", tuEs:"¡Buenos días!", clave:[["おはよう","お早う","ohayo"]], usa:["j-ohayo"] },
+    { p:"ありがとうございます。", pr:"a-ri-ga-too go-zai-mas.", es:"Muchas gracias.", tu:"いいえ。", tuPr:"ii-e.", tuEs:"No hay de qué (literalmente \"no\").", clave:[["いいえ","iie"]], usa:["j-arigato","j-iie"] },
+    { p:"すみません。", pr:"su-mi-ma-sen.", es:"Disculpe.", tu:"はい。", tuPr:"jai.", tuEs:"Sí, dígame.", clave:[["はい","hai"]], usa:["j-sumimasen","j-hai"] },
+    { p:"はじめまして。", pr:"ja-yi-me-mash-te.", es:"Mucho gusto.", tu:"はじめまして。わたしはケビンです。", tuPr:"ja-yi-me-mash-te. ua-ta-shi ua ke-bin des.", tuEs:"Mucho gusto. Yo soy Kevin.", clave:[["ケビン","kevin","けびん"]], usa:["j-hajime","j-kevin"] },
+    { p:"よろしくおねがいします。", pr:"yo-ro-shi-ku o-ne-gai-shi-mas.", es:"Encantado.", tu:"よろしくおねがいします。", tuPr:"yo-ro-shi-ku o-ne-gai-shi-mas.", tuEs:"Encantado.", clave:[["よろしく","宜しく"]], usa:["j-yoroshiku"] },
+    { p:"くうこうです。", pr:"kuu-koo des.", es:"Esto es el aeropuerto.", tu:"トイレはどこですか。", tuPr:"to-i-re ua do-ko des ka.", tuEs:"¿Dónde está el baño?", clave:[["どこ","何処"]], usa:["j-kuukou","j-dokodesuka"] },
+    { p:"えいごをはなせますか。", pr:"ei-go o ja-na-se-mas ka.", es:"¿Puede hablar inglés?", tu:"わかりません。", tuPr:"ua-ka-ri-ma-sen.", tuEs:"No entiendo.", clave:[["わかりません","分かりません","判りません"]], usa:["j-eigo","j-wakarimasen"] },
+    { p:"おやすみなさい。", pr:"o-ya-su-mi-na-sai.", es:"Buenas noches (al irse a dormir).", tu:"おやすみなさい。", tuPr:"o-ya-su-mi-na-sai.", tuEs:"Buenas noches.", clave:[["おやすみ","お休み"]], usa:["j-oyasumi"] }
   ]}
 };
 const AVATAR_MAESTRO = `
@@ -4325,14 +4574,19 @@ function escucharUsuario(){
   r.interimResults = false;
   r.maxAlternatives = 1;
   r.onresult = e => evaluar(e.results[0][0].transcript);
-  r.onerror = () => { document.getElementById("fbl").textContent = "No te escuché bien. Intenta otra vez o usa los botones."; };
+  r.onerror = e => {
+    const msg = e.error === "not-allowed" ? "La app no tiene permiso para usar el micrófono. Actívalo en el candado de la barra de direcciones o usa los botones."
+      : e.error === "language-not-supported" ? "Tu teléfono no reconoce la voz en este idioma. Usa los botones ✔ / ✖."
+      : "No te escuché bien. Intenta otra vez o usa los botones.";
+    document.getElementById("fbl").textContent = msg;
+  };
   r.start();
 }
 // Evalúa lo que dijo el alumno (voz) contra las palabras clave de la línea.
 function evaluar(texto){
   const L = escena(llamadaEst.k).lineas[llamadaEst.i];
   const t = texto.toLowerCase().replace(/[.,!?¿¡]/g, "");
-  const ok = L.clave.every(w => t.includes(w.toLowerCase()));
+  const ok = L.clave.every(w => [].concat(w).some(x => t.includes(x.toLowerCase())));
   if (!ok) decirMaestro(L.tu);
   marcar(ok, ok ? "✔ ¡Muy bien!" : `Escuché: "${texto}". Respuesta correcta: "${L.tu}" (${L.tuPr}) — ${L.tuEs}`);
 }
@@ -4357,21 +4611,42 @@ function siguienteLinea(){
   llamada();
 }
 
-// ---------- Audio por palabra: MP3 si existe (audio/en o audio/ko), si no voz del navegador ----------
-function slug(t){ return t.toLowerCase().replace(/[^a-z0-9가-힯]+/g, "-").replace(/^-|-$/g, ""); }
-function hablar(texto){
-  const esKo = /[가-힯㄰-㆏]/.test(texto);
-  const ruta = (esKo ? "audio/ko/" : "audio/en/") + slug(texto) + ".mp3";
-  const a = new Audio(ruta);
-  a.onerror = () => voz(texto, esKo);
-  a.play().catch(() => voz(texto, esKo));
+// ---------- Audio por palabra: MP3 si existe (audio/en, audio/ko o audio/ja), si no voz del navegador ----------
+function idiomaDeTexto(texto){
+  if (/[가-힯㄰-㆏]/.test(texto)) return { carpeta: "ko", lang: "ko-KR", nombre: "coreano" };
+  if (/[\u3040-\u30ff\u4e00-\u9faf]/.test(texto)) return { carpeta: "ja", lang: "ja-JP", nombre: "japonés" };
+  return { carpeta: "en", lang: "en-US", nombre: "inglés" };
 }
-function voz(texto, esKo){
-  if (!("speechSynthesis" in window)) return;
+function slug(t){ return t.toLowerCase().replace(/[^a-z0-9가-힯\u3040-\u30ff\u4e00-\u9faf]+/g, "-").replace(/^-|-$/g, ""); }
+function hablar(texto){
+  const I = idiomaDeTexto(texto);
+  const a = new Audio(`audio/${I.carpeta}/${slug(texto)}.mp3`);
+  a.onerror = () => voz(texto, I);
+  a.play().catch(() => voz(texto, I));
+}
+function voz(texto, I){
+  if (!("speechSynthesis" in window)) return avisar("Este navegador no puede leer en voz alta. Abre la app en Chrome para escuchar la pronunciación.");
+  const voces = speechSynthesis.getVoices();
+  const base = I.lang.slice(0, 2);
+  const v = voces.find(x => x.lang.replace("_", "-").startsWith(base));
+  if (voces.length && !v) avisar(`Tu dispositivo no tiene una voz en ${I.nombre} instalada, así que el audio puede sonar mal o no sonar. En Android: Ajustes → Idioma → Salida de texto a voz → instala ${I.nombre}. Mientras tanto, guíate por la pronunciación escrita.`);
   const u = new SpeechSynthesisUtterance(texto);
-  u.lang = esKo ? "ko-KR" : "en-US";
+  u.lang = I.lang;
+  if (v) u.voice = v;
   speechSynthesis.cancel();
   speechSynthesis.speak(u);
+}
+if ("speechSynthesis" in window) speechSynthesis.getVoices();
+// Aviso claro en pantalla (se muestra una vez por mensaje mientras la app está abierta).
+function avisar(msg){
+  avisar.vistos ||= new Set();
+  if (avisar.vistos.has(msg)) return;
+  avisar.vistos.add(msg);
+  const d = document.createElement("div");
+  d.className = "aviso";
+  d.innerHTML = `<span>⚠️ ${msg}</span><button class="btn sec" style="padding:6px 12px;font-size:14px">Entendido</button>`;
+  d.querySelector("button").onclick = () => d.remove();
+  document.body.appendChild(d);
 }
 
 // Registro de la PWA (instalable en Chrome y Android)

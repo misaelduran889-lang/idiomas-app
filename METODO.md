@@ -43,3 +43,13 @@ Se sigue el mismo orden: sonidos y letras primero, luego sílabas, luego palabra
 - **Idea para la app:** una sesión de gramática por modal con 2 o 3 ejemplos de la misma forma, la parte clave resaltada y un repaso final de la lista completa.
 - **Palabras interrogativas (@apuntes.ingles, 21 s):** tabla fija con 30 filas. A la izquierda la pregunta en español (¿Qué?, ¿Cómo?, ¿Dónde?, ¿Cuándo?, ¿Por qué?, ¿Quién?, ¿Cuánto?, ¿Para qué?...). A la derecha el inglés (What, How, Where, When, Why, Who, How much, What for...) con pronunciación escrita en español ("uát", "jáu", "uér", "jáu mách"). No hay narración; se muestra la tabla completa y el mascota aparece al lado.
 - **Idea para la app:** tarjeta de referencia en forma de tabla (español | inglés | pronunciación), con la opción de repasarla como juego de emparejamiento.
+
+## Japonés (añadido el 13 nov 2026)
+
+- Mismo método y mismo orden que los otros idiomas: hiragana (vocales, filas K, S, T y N) → primeras palabras → saludos → presentarse → aeropuerto.
+- Cada vocal y cada fila llevan un icono para recordarla (あ = persona con los brazos abiertos que dice "aaa").
+- **Pronunciación escrita:** en letras latinas leídas como en español, en minúsculas y separadas por sílabas ("kon-ni-chi-ua"). No se marca sílaba fuerte porque en japonés todas duran lo mismo. Las vocales largas se escriben dobles ("kuu-koo"). La guía completa está en el campo `guia` de `IDIOMAS.japones`.
+- Cada palabra lleva también `romaji` (escritura oficial en letras latinas). En las preguntas de escribir se acepta el kana o el romaji, porque el teléfono no siempre tiene teclado japonés.
+- Llamada con Mateo en japonés (`ESCENAS.japones`). Las palabras clave aceptan varias formas (kana, kanji o romaji), porque el reconocimiento de voz a veces devuelve kanji.
+- Audio: MP3 en `audio/ja/` si existe; si no, la voz del teléfono en ja-JP. Si el teléfono no tiene voz japonesa instalada, la app lo avisa en pantalla.
+- Pendiente: no hay todavía una página de japonés en Notion. Cuando exista, su contenido se pasa a estas sesiones.
