@@ -359,6 +359,14 @@ function hoy(){
       <div class="muted">Avance en ${IDIOMAS[k].nombre}</div>
       <div class="bar"><div style="width:${Math.round(hechas / lista.length * 100)}%"></div></div>
       <p class="muted">${hechas} de ${lista.length} sesiones aprobadas (60 % para avanzar).</p>
+    </div>
+    <div class="card">
+      <div class="muted">Llevar mi progreso a otro dispositivo</div>
+      <p class="muted">Muestra tu código, cópialo y pégalo en el otro teléfono o laptop, en esta misma sección.</p>
+      <div class="row"><button class="btn sec" onclick="mostrarCodigo()">Ver mi código</button></div>
+      <textarea id="codigo" class="idi" style="width:100%;min-height:80px;margin-top:10px" placeholder="Pega aquí el código"></textarea>
+      <div class="row"><button class="btn" onclick="cargarCodigo()">Cargar código</button></div>
+      <div id="msgCodigo" class="muted" style="margin-top:8px"></div>
     </div>`;
 }
 
@@ -621,19 +629,54 @@ function faseResultado(){
     </div></div>`;
 }
 
+// ---------- Progreso: lo estudiado y cómo llevarlo a otro dispositivo ----------
+// Palabras estudiadas = palabras de sesiones aprobadas en el idioma activo.
+function estudiados(){
+  const set = new Set();
+  for (const s of todasSesiones(estado.idioma)) if (estaHecha(s.id)) s.items.forEach(it => set.add(it.id));
+  return set;
+}
+// Escena de llamada: solo incluye las frases cuyas palabras ya estudió el alumno.
+function escena(k){
+  const E = ESCENAS[k];
+  if (!E) return null;
+  const set = estudiados();
+  return { ...E, lineas: E.lineas.filter(L => (L.usa || []).every(id => set.has(id))) };
+}
+// Código para copiar el progreso a otro teléfono o laptop (sin cuenta).
+function mostrarCodigo(){
+  const c = btoa(unescape(encodeURIComponent(JSON.stringify(estado))));
+  const caja = document.getElementById("codigo");
+  caja.value = c; caja.select();
+  document.getElementById("msgCodigo").textContent = "Código listo. Cópialo y pégalo en el otro dispositivo.";
+}
+function cargarCodigo(){
+  const caja = document.getElementById("codigo");
+  let obj = null;
+  try { obj = JSON.parse(decodeURIComponent(escape(atob(caja.value.trim())))); } catch (e) { obj = null; }
+  if (!obj || !obj.tarjetas){ document.getElementById("msgCodigo").textContent = "Ese código no es válido."; return; }
+  estado = obj;
+  estado.tarjetas ||= {}; estado.sesiones ||= {}; estado.puntajes ||= {};
+  if (!IDIOMAS[estado.idioma]) estado.idioma = "ingles";
+  guardar();
+  selIdioma.value = estado.idioma;
+  hoy();
+  document.getElementById("msgCodigo").textContent = "Progreso cargado en este dispositivo.";
+}
+
 // ---------- Modo llamada: profesor (avatar masculino) con diálogo, pronunciación y práctica de voz ----------
 // Cada línea: lo que dice el profesor, su traducción, la respuesta esperada y las palabras clave que la validan.
 const ESCENAS = {
   ingles: { titulo: "Llamada: saludos", lang: "en-US", lineas: [
-    { p:"Hello! How are you today?", pr:"JELÓ! JAU AR YU TUDÉI?", es:"¡Hola! ¿Cómo estás hoy?", tu:"I'm fine, thank you.", tuPr:"AIM FÁIN, ZÁNK YU", tuEs:"Estoy bien, gracias.", clave:["fine"] },
-    { p:"Nice to meet you. What is your name?", pr:"NÁIS TU MÍT YU. UÁT IS YUR NÉIM?", es:"Mucho gusto. ¿Cuál es tu nombre?", tu:"My name is Kevin.", tuPr:"MÁI NÉIM IS KÉVIN", tuEs:"Mi nombre es Kevin.", clave:["my", "name"] },
-    { p:"Good morning! Would you like some coffee?", pr:"GUD MÓRNIN! UUD YU LÁIK SAM KÓFI?", es:"¡Buenos días! ¿Quieres café?", tu:"Yes, please.", tuPr:"YES, PLIS", tuEs:"Sí, por favor.", clave:["yes"] },
-    { p:"Thank you for coming. See you tomorrow!", pr:"ZÁNK YU FOR KÁMIN. SI YU TUMÁRO!", es:"Gracias por venir. ¡Nos vemos mañana!", tu:"See you tomorrow, bye!", tuPr:"SI YU TUMÁRO, BÁI", tuEs:"¡Nos vemos mañana, adiós!", clave:["see", "you"] }
+    { p:"Hello! How are you today?", pr:"JELÓ! JAU AR YU TUDÉI?", es:"¡Hola! ¿Cómo estás hoy?", tu:"I'm fine, thank you.", tuPr:"AIM FÁIN, ZÁNK YU", tuEs:"Estoy bien, gracias.", clave:["fine"], usa:["i1"] },
+    { p:"Nice to meet you. What is your name?", pr:"NÁIS TU MÍT YU. UÁT IS YUR NÉIM?", es:"Mucho gusto. ¿Cuál es tu nombre?", tu:"My name is Kevin.", tuPr:"MÁI NÉIM IS KÉVIN", tuEs:"Mi nombre es Kevin.", clave:["my", "name"], usa:[] },
+    { p:"Good morning! Would you like some coffee?", pr:"GUD MÓRNIN! UUD YU LÁIK SAM KÓFI?", es:"¡Buenos días! ¿Quieres café?", tu:"Yes, please.", tuPr:"YES, PLIS", tuEs:"Sí, por favor.", clave:["yes"], usa:["i-gm"] },
+    { p:"Thank you for coming. See you tomorrow!", pr:"ZÁNK YU FOR KÁMIN. SI YU TUMÁRO!", es:"Gracias por venir. ¡Nos vemos mañana!", tu:"See you tomorrow, bye!", tuPr:"SI YU TUMÁRO, BÁI", tuEs:"¡Nos vemos mañana, adiós!", clave:["see", "you"], usa:["i-ty"] }
   ]},
   coreano: { titulo: "Llamada: saludos", lang: "ko-KR", lineas: [
-    { p:"안녕하세요! 오늘 어떻게 지내요?", pr:"ANYÓNG-HA-SÉ-YO! O-NEUL O-TÓ-KE JI-NÉ-YO?", es:"¡Hola! ¿Cómo estás hoy?", tu:"네, 잘 지내요.", tuPr:"NE, JAL JI-NÉ-YO", tuEs:"Sí, estoy bien.", clave:["잘"] },
-    { p:"만나서 반가워요. 이름은 뭐예요?", pr:"MAN-NA-SÓ BAN-GA-UÓ-YO. I-REUM-EUN MWÓ-YE-YO?", es:"Mucho gusto. ¿Cuál es tu nombre?", tu:"제 이름은 Kevin이에요.", tuPr:"JE I-REUM-EUN KÉVIN-I-É-YO", tuEs:"Mi nombre es Kevin.", clave:["이름은"] },
-    { p:"감사합니다! 내일 봐요.", pr:"KAM-SA-HAM-NI-DA! NE-IL BWA-YO.", es:"¡Gracias! Nos vemos mañana.", tu:"네, 내일 봐요.", tuPr:"NE, NE-IL BWA-YO", tuEs:"Sí, nos vemos mañana.", clave:["내일"] }
+    { p:"안녕하세요! 오늘 어떻게 지내요?", pr:"ANYÓNG-HA-SÉ-YO! O-NEUL O-TÓ-KE JI-NÉ-YO?", es:"¡Hola! ¿Cómo estás hoy?", tu:"네, 잘 지내요.", tuPr:"NE, JAL JI-NÉ-YO", tuEs:"Sí, estoy bien.", clave:["잘"], usa:["c1"] },
+    { p:"만나서 반가워요. 이름은 뭐예요?", pr:"MAN-NA-SÓ BAN-GA-UÓ-YO. I-REUM-EUN MWÓ-YE-YO?", es:"Mucho gusto. ¿Cuál es tu nombre?", tu:"제 이름은 Kevin이에요.", tuPr:"JE I-REUM-EUN KÉVIN-I-É-YO", tuEs:"Mi nombre es Kevin.", clave:["이름은"], usa:[] },
+    { p:"감사합니다! 내일 봐요.", pr:"KAM-SA-HAM-NI-DA! NE-IL BWA-YO.", es:"¡Gracias! Nos vemos mañana.", tu:"네, 내일 봐요.", tuPr:"NE, NE-IL BWA-YO", tuEs:"Sí, nos vemos mañana.", clave:["내일"], usa:["c3"] }
   ]}
 };
 const AVATAR_MAESTRO = `
@@ -654,8 +697,9 @@ let llamadaEst = null;
 const RECO = window.SpeechRecognition || window.webkitSpeechRecognition;
 
 function llamada(){
-  const k = estado.idioma, E = ESCENAS[k];
+  const k = estado.idioma, E = escena(k);
   if (!E){ app.innerHTML = `<div class="card"><p>Aún no hay llamada para este idioma.</p></div>`; return; }
+  if (!E.lineas.length){ app.innerHTML = `<div class="llam"><div class="big">Llamada bloqueada</div><p class="muted">Aprueba la sesión de saludos para desbloquear esta llamada. Las frases usan lo que ya estudiaste.</p></div>`; return; }
   if (!llamadaEst || llamadaEst.k !== k) llamadaEst = { k, i: 0, ok: 0, hablado: -1, fb: "", respondida: false };
   const total = E.lineas.length, fin = llamadaEst.i >= total;
   if (fin){
@@ -703,7 +747,7 @@ function decirMaestro(t){
 }
 function escucharUsuario(){
   const r = new RECO();
-  r.lang = ESCENAS[llamadaEst.k].lang;
+  r.lang = escena(llamadaEst.k).lang;
   r.interimResults = false;
   r.maxAlternatives = 1;
   r.onresult = e => evaluar(e.results[0][0].transcript);
@@ -712,7 +756,7 @@ function escucharUsuario(){
 }
 // Evalúa lo que dijo el alumno (voz) contra las palabras clave de la línea.
 function evaluar(texto){
-  const L = ESCENAS[llamadaEst.k].lineas[llamadaEst.i];
+  const L = escena(llamadaEst.k).lineas[llamadaEst.i];
   const t = texto.toLowerCase().replace(/[.,!?¿¡]/g, "");
   const ok = L.clave.every(w => t.includes(w));
   marcar(ok, ok ? "✔ ¡Muy bien!" : `Casi. Di algo como: "${L.tu}"`);
@@ -726,7 +770,7 @@ function marcar(ok, aviso){
   llamada();
 }
 function autoevaluar(ok){
-  const L = ESCENAS[llamadaEst.k].lineas[llamadaEst.i];
+  const L = escena(llamadaEst.k).lineas[llamadaEst.i];
   marcar(ok, ok ? "✔ ¡Muy bien!" : `Vuelve a intentarlo. Frase: "${L.tu}"`);
 }
 function siguienteLinea(){

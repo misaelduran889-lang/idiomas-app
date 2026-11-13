@@ -1,4 +1,4 @@
-const CACHE = "mi-tutor-v6";
+const CACHE = "mi-tutor-v7";
 const ARCHIVOS = ["./", "./index.html", "./manifest.json", "./icon.svg"];
 
 self.addEventListener("install", e => {
