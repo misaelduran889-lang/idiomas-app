@@ -737,7 +737,7 @@ function escena(k){
   const E = ESCENAS[k];
   if (!E) return null;
   const set = estudiados();
-  return { ...E, lineas: E.lineas.filter(L => (L.usa || []).every(id => set.has(id))) };
+  return { ...E, lineas: E.lineas.filter(L => L.usa && L.usa.length && L.usa.every(id => set.has(id))) };
 }
 // Código para copiar el progreso a otro teléfono o laptop (sin cuenta).
 function mostrarCodigo(){
@@ -762,17 +762,28 @@ function cargarCodigo(){
 
 // ---------- Modo llamada: profesor (avatar masculino) con diálogo, pronunciación y práctica de voz ----------
 // Cada línea: lo que dice el profesor, su traducción, la respuesta esperada y las palabras clave que la validan.
+// Cada línea solo aparece cuando el alumno ya aprobó las sesiones de sus palabras (campo usa = ids de los elementos).
 const ESCENAS = {
-  ingles: { titulo: "Llamada: saludos", lang: "en-US", lineas: [
-    { p:"Hello! How are you today?", pr:"JELÓ! JAU AR YU TUDÉI?", es:"¡Hola! ¿Cómo estás hoy?", tu:"I'm fine, thank you.", tuPr:"AIM FÁIN, ZÁNK YU", tuEs:"Estoy bien, gracias.", clave:["fine"], usa:["i1"] },
-    { p:"Nice to meet you. What is your name?", pr:"NÁIS TU MÍT YU. UÁT IS YUR NÉIM?", es:"Mucho gusto. ¿Cuál es tu nombre?", tu:"My name is Kevin.", tuPr:"MÁI NÉIM IS KÉVIN", tuEs:"Mi nombre es Kevin.", clave:["my", "name"], usa:[] },
-    { p:"Good morning! Would you like some coffee?", pr:"GUD MÓRNIN! UUD YU LÁIK SAM KÓFI?", es:"¡Buenos días! ¿Quieres café?", tu:"Yes, please.", tuPr:"YES, PLIS", tuEs:"Sí, por favor.", clave:["yes"], usa:["i-gm"] },
-    { p:"Thank you for coming. See you tomorrow!", pr:"ZÁNK YU FOR KÁMIN. SI YU TUMÁRO!", es:"Gracias por venir. ¡Nos vemos mañana!", tu:"See you tomorrow, bye!", tuPr:"SI YU TUMÁRO, BÁI", tuEs:"¡Nos vemos mañana, adiós!", clave:["see", "you"], usa:["i-ty"] }
+  ingles: { titulo: "Llamada con Mateo", lang: "en-US", lineas: [
+    { p:"Hello!", pr:"JELÓ!", es:"¡Hola!", tu:"Hi!", tuPr:"JÁI!", tuEs:"¡Hola!", clave:["Hi"], usa:["i1","i2"] },
+    { p:"Good morning!", pr:"GUD MÓRNIN!", es:"¡Buenos días!", tu:"Good morning!", tuPr:"GUD MÓRNIN!", tuEs:"¡Buenos días!", clave:["Good morning"], usa:["i-gm"] },
+    { p:"How are you?", pr:"JAU AR YU?", es:"¿Cómo estás?", tu:"Thank you.", tuPr:"ZÁNK YU", tuEs:"Gracias.", clave:["Thank you"], usa:["i-ha","i-ty"] },
+    { p:"Excuse me.", pr:"EKSKIÚS MI.", es:"Perdón.", tu:"Yes.", tuPr:"YES", tuEs:"Sí.", clave:["Yes"], usa:["i-em","i-ye"] },
+    { p:"Sorry.", pr:"SÓRI.", es:"Lo siento.", tu:"No, thank you.", tuPr:"NOU, ZÁNK YU", tuEs:"No, gracias.", clave:["No"], usa:["i-so","i-no","i-ty"] },
+    { p:"Please?", pr:"PLÍS?", es:"¿Por favor?", tu:"Yes, please.", tuPr:"YES, PLÍS", tuEs:"Sí, por favor.", clave:["please"], usa:["i-pl","i-ye"] },
+    { p:"Good night!", pr:"GUD NÁIT!", es:"¡Buenas noches!", tu:"Bye!", tuPr:"BÁI", tuEs:"¡Adiós!", clave:["Bye"], usa:["i-gn","i-bye"] },
+    { p:"Mother.", pr:"MÁ-der.", es:"Madre.", tu:"Father.", tuPr:"FÁ-der", tuEs:"Padre.", clave:["Father"], usa:["i-mo","i3"] },
+    { p:"Think!", pr:"ZINK!", es:"¡Piensa!", tu:"This!", tuPr:"DIS!", tuEs:"¡Este!", clave:["This"], usa:["i-th","i-ths"] },
+    { p:"Ice cream?", pr:"ÁIS KRÍM?", es:"¿Helado?", tu:"Yes, please!", tuPr:"YES, PLÍS!", tuEs:"¡Sí, por favor!", clave:["Yes"], usa:["i4","i-ye","i-pl"] }
   ]},
-  coreano: { titulo: "Llamada: saludos", lang: "ko-KR", lineas: [
-    { p:"안녕하세요! 오늘 어떻게 지내요?", pr:"ANYÓNG-HA-SÉ-YO! O-NEUL O-TÓ-KE JI-NÉ-YO?", es:"¡Hola! ¿Cómo estás hoy?", tu:"네, 잘 지내요.", tuPr:"NE, JAL JI-NÉ-YO", tuEs:"Sí, estoy bien.", clave:["잘"], usa:["c1"] },
-    { p:"만나서 반가워요. 이름은 뭐예요?", pr:"MAN-NA-SÓ BAN-GA-UÓ-YO. I-REUM-EUN MWÓ-YE-YO?", es:"Mucho gusto. ¿Cuál es tu nombre?", tu:"제 이름은 Kevin이에요.", tuPr:"JE I-REUM-EUN KÉVIN-I-É-YO", tuEs:"Mi nombre es Kevin.", clave:["이름은"], usa:[] },
-    { p:"감사합니다! 내일 봐요.", pr:"KAM-SA-HAM-NI-DA! NE-IL BWA-YO.", es:"¡Gracias! Nos vemos mañana.", tu:"네, 내일 봐요.", tuPr:"NE, NE-IL BWA-YO", tuEs:"Sí, nos vemos mañana.", clave:["내일"], usa:["c3"] }
+  coreano: { titulo: "Llamada con Mateo", lang: "ko-KR", lineas: [
+    { p:"안녕하세요!", pr:"ANYÓNG-HA-SÉ-YO!", es:"¡Hola! (formal)", tu:"안녕하세요!", tuPr:"ANYÓNG-HA-SÉ-YO", tuEs:"¡Hola!", clave:["안녕하세요"], usa:["c1"] },
+    { p:"안녕!", pr:"ANYÓNG!", es:"¡Hola! (informal)", tu:"안녕!", tuPr:"ANYÓNG!", tuEs:"¡Hola!", clave:["안녕"], usa:["c2"] },
+    { p:"감사합니다.", pr:"KAMSA-HAMNIDA.", es:"Gracias.", tu:"네.", tuPr:"NE.", tuEs:"Sí.", clave:["네"], usa:["c3","c-ne"] },
+    { p:"미안합니다.", pr:"MI-AN-HAM-NI-DA.", es:"Lo siento.", tu:"아니요.", tuPr:"A-NI-YO.", tuEs:"No.", clave:["아니요"], usa:["c-mi","c-ani"] },
+    { p:"안녕히 가세요.", pr:"AN-NYÓNG-HI GA-SÉ-YO.", es:"Adiós (a alguien que se va).", tu:"안녕히 가세요.", tuPr:"AN-NYÓNG-HI GA-SÉ-YO.", tuEs:"Adiós.", clave:["안녕히"], usa:["c-gas"] },
+    { p:"사과.", pr:"SA-GWA.", es:"Manzana.", tu:"하나.", tuPr:"HA-NA.", tuEs:"Uno.", clave:["하나"], usa:["w-sagwa","w-hana"] },
+    { p:"나라.", pr:"NA-RA.", es:"País.", tu:"바나나.", tuPr:"BA-NA-NA.", tuEs:"Banana.", clave:["바나나"], usa:["w-nara","w-banana"] }
   ]}
 };
 const AVATAR_MAESTRO = `
