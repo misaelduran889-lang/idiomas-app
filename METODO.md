@@ -29,3 +29,9 @@ El paso puede tener `say` (texto a escuchar con el botón de audio).
 ## Para cada idioma nuevo
 
 Se sigue el mismo orden: sonidos y letras primero, luego sílabas, luego palabras cortas, luego frases. La dificultad sube solo cuando el alumno domina el paso anterior.
+
+## Notas de videos de referencia (pendientes de incorporar)
+
+- **Japonés en 1 minuto (pako.nihongo, 77 s):** gancho "lee por primera vez en japonés". Cada vocal se enseña con un icono visual para recordarla (cruz, pez, sombrero). Las vocales se suman una por una: A, luego AI, luego AIU, luego AIUE, luego AIUEO. Al final muestra la equivalencia "あ = A" en grande. Cierra con "repasa las veces que sea necesario".
+- **Idea para la app:** tarjetas de equivalencia ("あ = A"), icono mnemotécnico por palabra, y una sesión que crece sumando elementos.
+- **Inglés americano (inglesgratis1, 19 min):** escenas con subtítulos, desglose de frases y pronunciación en español. Ver sección anterior.
