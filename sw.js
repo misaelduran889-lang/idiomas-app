@@ -1,5 +1,7 @@
-const CACHE = "mi-tutor-v7";
-const ARCHIVOS = ["./", "./index.html", "./manifest.json", "./icon.svg"];
+const CACHE = "mi-tutor-v8";
+const ARCHIVOS = ["./", "./index.html", "./manifest.json", "./icon.svg",
+  "./img/fondo-llamada.jpg", "./img/cabecera-ruta.jpg", "./img/fondo-hoy.jpg",
+  "./img/fondo-repasar.jpg", "./img/fondo-mapa.jpg", "./img/celebracion.jpg"];
 
 self.addEventListener("install", e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(ARCHIVOS)));

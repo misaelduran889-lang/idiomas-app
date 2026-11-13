@@ -43,6 +43,14 @@
   .subt { background:rgba(15,22,38,.88); border:1px solid var(--line); border-radius:14px; padding:14px; margin-top:12px; }
   .pad { height:80px; }
   table td { padding:6px 4px; border-bottom:1px solid var(--line); }
+  /* Fondo por pantalla: la imagen de cada vista queda detrás, con velo oscuro para leer bien */
+  body::before { content:""; position:fixed; inset:0; z-index:-1; pointer-events:none; background-size:cover; background-position:center; background-color:var(--bg); }
+  body[data-vista="hoy"]::before { background-image: linear-gradient(rgba(11,18,32,.72), rgba(11,18,32,.9)), url("img/fondo-hoy.jpg"); }
+  body[data-vista="estudiar"]::before { background-image: linear-gradient(rgba(11,18,32,.72), rgba(11,18,32,.9)), url("img/fondo-repasar.jpg"); }
+  body[data-vista="ruta"]::before { background-image: linear-gradient(rgba(11,18,32,.72), rgba(11,18,32,.9)), url("img/cabecera-ruta.jpg"); }
+  body[data-vista="mapa"]::before { background-image: linear-gradient(rgba(11,18,32,.72), rgba(11,18,32,.9)), url("img/fondo-mapa.jpg"); }
+  body[data-vista="llamada"]::before { background-image: linear-gradient(rgba(11,18,32,.55), rgba(11,18,32,.85)), url("img/fondo-llamada.jpg"); }
+  .celebra { display:block; width:100%; max-width:260px; margin:6px auto 4px; border-radius:14px; }
 </style>
 </head>
 <body>
@@ -333,6 +341,7 @@ let vista = "hoy";
 let sesionAct = null;
 
 function render(){
+  document.body.dataset.vista = vista;
   document.querySelectorAll("nav button").forEach(b => b.classList.toggle("on", b.dataset.view === vista));
   ({ hoy, estudiar, ruta, llamada, mapa }[vista])();
 }
@@ -687,6 +696,7 @@ function faseResultado(){
   const sig = lista[lista.findIndex(x => x.id === S.s.id) + 1];
   app.innerHTML = `<div class="card">
     <div class="muted">${S.s.titulo}</div>
+    ${pasa ? `<img class="celebra" src="img/celebracion.jpg" alt="">` : ""}
     <div class="big" style="margin-top:6px">${pasa ? "¡Lo lograste!" : "Casi, repítela"}</div>
     <p>Acertaste ${S.aciertos} de ${S.total} (${pct} %). Para avanzar necesitas 60 %.</p>
     <p class="muted">${pasa
