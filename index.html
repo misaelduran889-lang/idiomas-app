@@ -295,6 +295,110 @@ const IDIOMAS = {
           { id:"n-trabajar", texto:"Work", pron:"UÉRK", es:"Trabajar", reg:"neutral" },
           { id:"n-estudiar", texto:"Study", pron:"STÁ-di", es:"Estudiar", reg:"neutral" }
         ]}
+    ]},
+    { titulo: "6. Inglés de aviación (OACI)", sesiones: [
+      { id:"av-oaci-am", titulo:"Alfabeto OACI: A a M",
+        pasos:[
+          { tipo:"gancho", texto:"Por radio, muchas letras suenan igual. Por eso cada letra tiene una palabra: así se deletrea sin errores." },
+          { tipo:"pieza", grande:"Alfa", pron:"ÁL-fa", texto:"A = Alfa. La sílaba fuerte va en MAYÚSCULA. Repite cada palabra después de escucharla." }
+        ],
+        items:[
+          { id:"av-a", texto:"Alfa", pron:"ÁL-fa", es:"A", reg:"neutral" },
+          { id:"av-b", texto:"Bravo", pron:"BRÁ-vo", es:"B", reg:"neutral" },
+          { id:"av-c", texto:"Charlie", pron:"CHÁR-li", es:"C", reg:"neutral" },
+          { id:"av-d", texto:"Delta", pron:"DÉL-ta", es:"D", reg:"neutral" },
+          { id:"av-e", texto:"Echo", pron:"É-co", es:"E", reg:"neutral" },
+          { id:"av-f", texto:"Foxtrot", pron:"FÓKS-trot", es:"F", reg:"neutral" },
+          { id:"av-g", texto:"Golf", pron:"GÓLF", es:"G", reg:"neutral" },
+          { id:"av-h", texto:"Hotel", pron:"jo-TÉL", es:"H", reg:"neutral" },
+          { id:"av-i", texto:"India", pron:"ÍN-dia", es:"I", reg:"neutral" },
+          { id:"av-j", texto:"Juliett", pron:"YÚ-li-et", es:"J", reg:"neutral" },
+          { id:"av-k", texto:"Kilo", pron:"KÍ-lo", es:"K", reg:"neutral" },
+          { id:"av-l", texto:"Lima", pron:"LÍ-ma", es:"L", reg:"neutral" },
+          { id:"av-m", texto:"Mike", pron:"MÁIK", es:"M", reg:"neutral" }
+        ]},
+      { id:"av-oaci-nz", titulo:"Alfabeto OACI: N a Z",
+        pasos:[
+          { tipo:"gancho", texto:"Ahora la segunda mitad del alfabeto. Así deletreas tu nombre y los códigos de los aeropuertos." },
+          { tipo:"pieza", grande:"Sierra", pron:"si-É-rra", texto:"S = Sierra. El aeropuerto SDQ se dice Sierra Delta Quebec. Repite cada palabra." }
+        ],
+        items:[
+          { id:"av-n", texto:"November", pron:"no-VÉM-ber", es:"N", reg:"neutral" },
+          { id:"av-o", texto:"Oscar", pron:"ÓS-car", es:"O", reg:"neutral" },
+          { id:"av-p", texto:"Papa", pron:"pa-PÁ", es:"P", reg:"neutral" },
+          { id:"av-q", texto:"Quebec", pron:"ke-BÉC", es:"Q", reg:"neutral" },
+          { id:"av-r", texto:"Romeo", pron:"RÓ-mi-o", es:"R", reg:"neutral" },
+          { id:"av-s", texto:"Sierra", pron:"si-É-rra", es:"S", reg:"neutral" },
+          { id:"av-t", texto:"Tango", pron:"TÁN-go", es:"T", reg:"neutral" },
+          { id:"av-u", texto:"Uniform", pron:"YÚ-ni-form", es:"U", reg:"neutral" },
+          { id:"av-v", texto:"Victor", pron:"VÍK-tor", es:"V", reg:"neutral" },
+          { id:"av-w", texto:"Whiskey", pron:"UÍS-ki", es:"W", reg:"neutral" },
+          { id:"av-x", texto:"X-ray", pron:"ÉKS-rei", es:"X", reg:"neutral" },
+          { id:"av-y", texto:"Yankee", pron:"IÁN-ki", es:"Y", reg:"neutral" },
+          { id:"av-z", texto:"Zulu", pron:"SÚ-lu", es:"Z", reg:"neutral" }
+        ]},
+      { id:"av-numeros", titulo:"Números en la radio",
+        pasos:[
+          { tipo:"gancho", texto:"En la radio los números se dicen dígito a dígito. Cuatro cosas se dicen distinto: tree, fower, fife y niner." },
+          { tipo:"pieza", grande:"Tree", pron:"TRI", texto:"3 se dice TREE (no three), y 9 se dice NINER. Repite cada número después de escucharlo." }
+        ],
+        items:[
+          { id:"av-0", texto:"Zero", pron:"SÍ-ro", es:"0", reg:"neutral" },
+          { id:"av-1", texto:"One", pron:"UAN", es:"1", reg:"neutral" },
+          { id:"av-2", texto:"Two", pron:"TU", es:"2", reg:"neutral" },
+          { id:"av-3", texto:"Tree", pron:"TRI", es:"3 (en radio)", reg:"neutral" },
+          { id:"av-4", texto:"Fower", pron:"FÁU-er", es:"4 (en radio)", reg:"neutral" },
+          { id:"av-5", texto:"Fife", pron:"FÁIF", es:"5 (en radio)", reg:"neutral" },
+          { id:"av-6", texto:"Six", pron:"SÍKS", es:"6", reg:"neutral" },
+          { id:"av-7", texto:"Seven", pron:"SÉ-ven", es:"7", reg:"neutral" },
+          { id:"av-8", texto:"Eight", pron:"ÉIT", es:"8", reg:"neutral" },
+          { id:"av-9", texto:"Niner", pron:"NÁI-ner", es:"9 (en radio)", reg:"neutral" },
+          { id:"av-dec", texto:"Decimal", pron:"DÉI-si-mal", es:"Punto decimal", reg:"neutral" },
+          { id:"av-cien", texto:"Hundred", pron:"JÁN-dred", es:"Cien / cientos", reg:"neutral" },
+          { id:"av-mil", texto:"Thousand", pron:"TÁU-sand", es:"Mil / miles", reg:"neutral" }
+        ]},
+      { id:"av-instr", titulo:"Rumbos, altitudes y niveles",
+        pasos:[
+          { tipo:"gancho", texto:"Estas palabras van en casi todas las instrucciones del controlador." },
+          { tipo:"pieza", grande:"Heading", pron:"JÉ-din", texto:"Heading = rumbo. Ej.: heading two seven zero (rumbo 270). Repite cada palabra." }
+        ],
+        items:[
+          { id:"av-rumbo", texto:"Heading", pron:"JÉ-din", es:"Rumbo", reg:"neutral" },
+          { id:"av-sub", texto:"Climb", pron:"KLÁIM", es:"Ascienda", reg:"neutral" },
+          { id:"av-baja", texto:"Descend", pron:"di-SÉND", es:"Descienda", reg:"neutral" },
+          { id:"av-mant", texto:"Maintain", pron:"mein-TÉIN", es:"Mantenga", reg:"neutral" },
+          { id:"av-nivel", texto:"Flight level", pron:"FLÁIT LÉ-vel", es:"Nivel de vuelo", reg:"neutral" },
+          { id:"av-pies", texto:"Feet", pron:"FÍT", es:"Pies", reg:"neutral" },
+          { id:"av-squawk", texto:"Squawk", pron:"SKUÓK", es:"Ponga el código del transpondedor", reg:"neutral" }
+        ]},
+      { id:"av-proc", titulo:"Palabras de procedimiento",
+        pasos:[
+          { tipo:"gancho", texto:"En la radio se usan palabras fijas con un significado exacto. Roger NO es un sí." },
+          { tipo:"pieza", grande:"Roger", pron:"RÓ-yer", texto:"Roger = recibí tu mensaje. Wilco = entendido y cumpliré. Repite cada palabra." }
+        ],
+        items:[
+          { id:"av-roger", texto:"Roger", pron:"RÓ-yer", es:"Recibí tu mensaje (no es un sí)", reg:"neutral" },
+          { id:"av-wilco", texto:"Wilco", pron:"UÍL-co", es:"Entendido y cumpliré", reg:"neutral" },
+          { id:"av-affirm", texto:"Affirm", pron:"a-FÉRM", es:"Sí", reg:"neutral" },
+          { id:"av-neg", texto:"Negative", pron:"NÉ-ga-tiv", es:"No", reg:"neutral" },
+          { id:"av-again", texto:"Say again", pron:"séi-a-GUÉN", es:"Repita (nunca \"repeat\")", reg:"neutral" },
+          { id:"av-stand", texto:"Standby", pron:"STÁND-bai", es:"Espere, ya lo llamo", reg:"neutral" },
+          { id:"av-corr", texto:"Correction", pron:"co-RÉK-shon", es:"Me equivoqué; lo correcto es…", reg:"neutral" },
+          { id:"av-conf", texto:"Confirm", pron:"con-FÉRM", es:"Confirme / pido verificar", reg:"neutral" },
+          { id:"av-readb", texto:"Read back", pron:"RÍD-bak", es:"Repítame el mensaje", reg:"neutral" },
+          { id:"av-unable", texto:"Unable", pron:"an-ÉI-bol", es:"No puedo cumplir", reg:"neutral" },
+          { id:"av-appr", texto:"Approved", pron:"a-PRÚVD", es:"Permiso concedido", reg:"neutral" },
+          { id:"av-disr", texto:"Disregard", pron:"dis-ri-GÁRD", es:"No haga caso a lo último", reg:"neutral" }
+        ]},
+      { id:"av-emerg", titulo:"Emergencias",
+        pasos:[
+          { tipo:"gancho", texto:"Estas dos palabras solo se usan en una emergencia. Son las más importantes de la radio." },
+          { tipo:"pieza", grande:"MAYDAY", pron:"MÉI-dei", texto:"MAYDAY = peligro grave e inminente. PAN PAN = urgencia sin peligro inmediato. Repite las dos." }
+        ],
+        items:[
+          { id:"av-mayday", texto:"MAYDAY", pron:"MÉI-dei", es:"Socorro: peligro grave e inminente", reg:"neutral" },
+          { id:"av-panpan", texto:"PAN PAN", pron:"pan-pan", es:"Urgencia: problema serio, sin peligro inmediato", reg:"neutral" }
+        ]}
     ]}
   ]},
   coreano: { nombre: "Coreano", unidades: [
